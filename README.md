@@ -27,7 +27,9 @@ fork of `leshkodev/freetube`). What this fork adds:
   tab bar stays at five items.
 
 Unsigned IPAs are built by [GitHub Actions](../../actions/workflows/build-unsigned-ipa.yml) on
-every push to `main`; sign them with your own tooling. Contributor notes live in
+every push to `main`; sign them with your own tooling. With an Apple Developer account and the
+iPhone plugged in, `DEVELOPMENT_TEAM=<team id> scripts/install-device.sh` builds, signs and
+installs directly. Contributor notes live in
 [AGENTS.md](AGENTS.md).
 
 ---

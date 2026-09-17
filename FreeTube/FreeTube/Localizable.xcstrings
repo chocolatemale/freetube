@@ -7711,22 +7711,6 @@
         }
       }
     },
-    "Sign in for your Home feed" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in for your Home feed"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登录后查看你的首页推荐"
-          }
-        }
-      }
-    },
     "Sign in to YouTube" : {
       "localizations" : {
         "de" : {
@@ -7803,6 +7787,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登录后可查看观看历史、播放列表、顶过的视频和稍后观看。"
+          }
+        }
+      }
+    },
+    "Sign in to see YouTube's recommendations for you.\n\nWithout an account, Home shows the latest videos from channels you follow in this app." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to see YouTube's recommendations for you.\n\nWithout an account, Home shows the latest videos from channels you follow in this app."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录后即可看到 YouTube 为你推荐的内容。\n\n未登录时，首页显示你在本应用中关注的频道的最新视频。"
           }
         }
       }
@@ -7899,22 +7899,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登录失败"
-          }
-        }
-      }
-    },
-    "Signed in, this tab shows YouTube's recommendations for you. Signed out, it shows the latest videos from channels you subscribe to locally — subscribe from a channel page or import a subscriptions CSV in Settings." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Signed in, this tab shows YouTube's recommendations for you. Signed out, it shows the latest videos from channels you subscribe to locally — subscribe from a channel page or import a subscriptions CSV in Settings."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登录后，这里显示 YouTube 为你推荐的内容；未登录时，显示你在本机订阅的频道的最新视频——可在频道页订阅，或在设置里导入订阅 CSV。"
           }
         }
       }
@@ -9478,6 +9462,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube 没有返回推荐内容。下拉重试。"
+          }
+        }
+      }
+    },
+    "Your Home feed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Home feed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的首页"
           }
         }
       }

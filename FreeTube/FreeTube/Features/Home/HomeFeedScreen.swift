@@ -230,9 +230,9 @@ struct LocalSubscriptionFeedView: View {
         .overlay {
             if !model.hasSubscriptions && model.videos.isEmpty {
                 ContentUnavailableView {
-                    Label("Sign in for your Home feed", systemImage: "house")
+                    Label("Your Home feed", systemImage: "house")
                 } description: {
-                    Text("Signed in, this tab shows YouTube's recommendations for you. Signed out, it shows the latest videos from channels you subscribe to locally — subscribe from a channel page or import a subscriptions CSV in Settings.")
+                    Text("Sign in to see YouTube's recommendations for you.\n\nWithout an account, Home shows the latest videos from channels you follow in this app.")
                 } actions: {
                     Button("Sign in") { showingLogin = true }
                         .buttonStyle(.borderedProminent)
