@@ -51,24 +51,28 @@ jobs:
           echo "== test-results summary =="
           xcrun xcresulttool get test-results summary --path "$RUNNER_TEMP/Tests.xcresult" 2>/dev/null | head -200 || true
           echo "== failing test details =="
-          xcrun xcresulttool get test-results tests --path "$RUNNER_TEMP/Tests.xcresult" 2>/dev/null \
-            | python3 -c 'import json,sys
-d=json.load(sys.stdin)
-def walk(n):
-    if isinstance(n,dict):
-        if n.get("result")=="Failed" and n.get("nodeType")=="Test Case":
-            print(n.get("name"))
-            for c in n.get("children",[]):
-                print("   ", c.get("nodeType"), ":", (c.get("name") or "")[:400])
-        for c in n.get("children",[]): walk(c)
-    elif isinstance(n,list):
-        for c in n: walk(c)
-walk(d.get("testNodes",d))' || true
+          cat > "$RUNNER_TEMP/failures.py" <<'PY'
+          import json, sys
+          data = json.load(sys.stdin)
+          def walk(node):
+              if isinstance(node, dict):
+                  if node.get("result") == "Failed" and node.get("nodeType") == "Test Case":
+                      print(node.get("name"))
+                      for child in node.get("children", []):
+                          print("    ", child.get("nodeType"), ":", (child.get("name") or "")[:400])
+                  for child in node.get("children", []):
+                      walk(child)
+              elif isinstance(node, list):
+                  for child in node:
+                      walk(child)
+          walk(data.get("testNodes", data))
+          PY
+          xcrun xcresulttool get test-results tests --path "$RUNNER_TEMP/Tests.xcresult" 2>/dev/null | python3 "$RUNNER_TEMP/failures.py" || true
           echo "== crash reports =="
           for f in $(find ~/Library/Logs/DiagnosticReports -name 'FreeTube*.ips' -newer "$RUNNER_TEMP/xcodebuild-test.log" 2>/dev/null | head -3); do
             echo "--- $f"; head -c 6000 "$f"; echo
           done
-          for f in $(find "$RUNNER_TEMP/Tests.xcresult" -name '*.crash' -o -name '*.ips' 2>/dev/null | head -3); do
+          for f in $(find "$RUNNER_TEMP/Tests.xcresult" \( -name '*.crash' -o -name '*.ips' \) 2>/dev/null | head -3); do
             echo "--- $f"; head -c 6000 "$f"; echo
           done
 

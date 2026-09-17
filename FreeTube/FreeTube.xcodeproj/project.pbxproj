@@ -190,6 +190,9 @@
 				en,
 				ru,
 				es,
+				fr,
+				de,
+				"zh-Hans",
 				Base,
 			);
 			mainGroup = AC591D1A2FB9BEE5009EE538;

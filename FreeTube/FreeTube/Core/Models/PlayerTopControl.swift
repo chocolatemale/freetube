@@ -6,6 +6,7 @@ enum PlayerTopControl: String, CaseIterable, Identifiable, Sendable {
     case mute
     case fullscreen
     case autoplay
+    case quality
 
     var id: String { rawValue }
 
@@ -16,6 +17,7 @@ enum PlayerTopControl: String, CaseIterable, Identifiable, Sendable {
         case .mute: return "Mute"
         case .fullscreen: return "Fullscreen"
         case .autoplay: return "Autoplay"
+        case .quality: return "Quality"
         }
     }
 
@@ -26,10 +28,11 @@ enum PlayerTopControl: String, CaseIterable, Identifiable, Sendable {
         case .mute: return "speaker.slash"
         case .fullscreen: return "arrow.up.left.and.arrow.down.right"
         case .autoplay: return "play.circle"
+        case .quality: return "slider.horizontal.3"
         }
     }
 
-    static let defaultOrder: [PlayerTopControl] = [.autoplay, .loop, .mute, .fullscreen, .speed]
+    static let defaultOrder: [PlayerTopControl] = [.autoplay, .loop, .mute, .quality, .fullscreen, .speed]
 
     static func decodeOrder(_ rawValue: String) -> [PlayerTopControl] {
         let stored = rawValue.split(separator: ",").compactMap { PlayerTopControl(rawValue: String($0)) }

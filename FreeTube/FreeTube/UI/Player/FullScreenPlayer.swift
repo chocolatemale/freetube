@@ -1045,7 +1045,37 @@ struct FullScreenPlayer: View {
             fullscreenButton
         case .autoplay:
             autoplayPlayerButton
+        case .quality:
+            qualityPlayerMenu
         }
+    }
+
+    /// Quality picker showing the active cap. Selecting a value updates the shared preference and
+    /// re-caps the current HLS item; progressive streams pick it up on the next load.
+    @ViewBuilder
+    private var qualityPlayerMenu: some View {
+        Menu {
+            ForEach(VideoQuality.allCases) { quality in
+                Button {
+                    player.setPlaybackQuality(quality)
+                    showPlayerControls()
+                } label: {
+                    if player.playbackQuality == quality {
+                        Label(quality.displayName, systemImage: "checkmark")
+                    } else {
+                        Text(quality.displayName)
+                    }
+                }
+            }
+        } label: {
+            Text(player.isAudioOnlySession ? VideoQuality.audioOnly.displayName : player.playbackQuality.displayName)
+                .font(.caption.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(minWidth: 42, minHeight: 36)
+                .shadow(color: .black.opacity(0.75), radius: 2, y: 1)
+        }
+        .disabled(player.isAudioOnlySession)
+        .accessibilityLabel("Playback quality")
     }
 
     @ViewBuilder

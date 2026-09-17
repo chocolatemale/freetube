@@ -39,7 +39,7 @@ struct UserPreferences {
     @AppStorage("oledPlayerBackground") var oledPlayerBackground: Bool = false
     @AppStorage("playerTopControlOrder") var playerTopControlOrderRaw: String = PlayerTopControl.encodeOrder(PlayerTopControl.defaultOrder)
     @AppStorage("hiddenPlayerTopControls") var hiddenPlayerTopControlsRaw: String = ""
-    /// When true, `LogFileWriter` opens a new file under `Documents/Logs/` on every app
+    /// When true, `LogFileWriter` opens a new file under `Application Support/Logs/` on every app
     /// launch and directly mirrors rendered `AppLog` entries into it. Useful for
     /// capturing diagnostic traces from TestFlight / sideload installs where Console.app
     /// access isn't practical. Defaults off — only a handful of users will ever flip this.

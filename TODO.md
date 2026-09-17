@@ -1,16 +1,27 @@
 ## TODO
-- Merge the copy button, open in browser,  copy url at current time into one share button. That button should not be in the player but below
-- Sponsorblock should also add the “Highlight” option and ask to skip if one is detected.
-- For all the sponsorblock options add a choice to disable, always skip, or just show in player but not skip.
-- Seems like a bug where scrolling back after skipping does not skip the sponsor again. Similarly, seeking forward into a sponsor does not skip it. It should automatically be skipped in all cases.
-- It would be nice to add the function to seek anywhere on the player by holding and moving your finger horizontally.
-- It would be nice to have these square video previews when seeking through a video.
-- Add a fullscreen button to the player which rotates the screen notch to the left.
-- Would be nice to add caption and quality selection button to the player. The quality selection should ideally showcase the current quality.
-- Add a download button under the player which uses yt-dlp and downloads the video in the downloads tab.
-- Add a switch for autoplay in the add next dropdown.
-- Store the previous videos (up to a certain amount) so that the back button would go to the previous video, but don’t show the video in the up next.
-- Add a history tab which shows the local history but stores it only on device, and has a clear history button.
-- When tapping the channel name, video should minimize and the channel
-should open in fullscreen. Right now it opens under the video. 
-- Add an extra playlist dropdown for when a video is opened from a playlist, which shows the full playlist.
+
+Open items only. Everything that used to be listed here and now exists in the app has been
+removed (share menu consolidation, SponsorBlock Highlight + per-category behaviour, re-skip after
+seeking, hold-to-seek, seek thumbnails, fullscreen rotation, download button under the player,
+autoplay switch, playback back-stack, local history tab, channel opens over the player, playlist
+panel, quality picker).
+
+### Player
+- Captions. YouTube's HLS manifests carry no legible tracks, so this needs the
+  `captions.playerCaptionsTracklistRenderer` list from the player response, a `timedtext` fetch,
+  and an overlay renderer. Not started.
+- Progressive streams do not re-resolve when the quality picker changes; only the HLS cap is
+  applied live. Re-resolving at the current position would make the picker feel instant.
+
+### Music
+- Library sub-pages (Liked songs = `VLLM`, `FEmusic_history`, uploads) are reachable through the
+  shelves YouTube returns but have no dedicated screens yet.
+- Lyrics tab from `/next` (`musicQueueRenderer` → Lyrics) is parsed by nobody.
+- Home continuation works when signed in; anonymous continuation tokens come back empty from
+  YouTube, so the anonymous Home is the first page only.
+- Offline songs are listed in Music › Library; they are still evicted by the download cache limit
+  like every other download. Pinning explicit saves would need a flag in `DownloadMetadata`.
+
+### Housekeeping
+- `PlayerStateManager.swift` is ~1,700 lines; the SponsorBlock, recommendation-refill and
+  playback-history concerns could each move to their own file without behaviour change.

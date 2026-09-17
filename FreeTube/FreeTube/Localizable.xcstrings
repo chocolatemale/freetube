@@ -1,74 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "“%@” will be permanently removed from your device." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„%@“ wird endgültig von Ihrem Gerät entfernt."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“%@” will be permanently removed from your device."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "«%@» se eliminará permanentemente de tu dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "« %@ » sera définitivement supprimé de votre appareil."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "«%@» будет окончательно удалён с устройства."
-          }
-        }
-      }
-    },
-    "%@ · streaming…" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · streamt…"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · streaming…"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · transmitiendo…"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · diffusion…"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · потоковая передача…"
-          }
-        }
-      }
-    },
     "%@ likes" : {
       "localizations" : {
         "de" : {
@@ -99,6 +31,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ нравится"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 次赞"
           }
         }
       }
@@ -134,11 +72,70 @@
             "state" : "translated",
             "value" : "%@ подписчиков"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 位订阅者"
+          }
+        }
+      }
+    },
+    "%@ · streaming…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · streamt…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · streaming…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · transmitiendo…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · diffusion…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · потоковая передача…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · 正在串流…"
+          }
         }
       }
     },
     "%lld" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
     },
     "%lld items" : {
       "extractionState" : "stale",
@@ -171,6 +168,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld элементов"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 项"
           }
         }
       }
@@ -205,6 +208,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Выбрано: %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已选择 %lld 项"
           }
         }
       }
@@ -241,6 +250,12 @@
             "state" : "translated",
             "value" : "%lld подписчиков"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 位订阅者"
+          }
         }
       }
     },
@@ -274,6 +289,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld видео"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 个视频"
           }
         }
       }
@@ -309,11 +330,30 @@
             "state" : "translated",
             "value" : "%lld просмотров"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 次观看"
+          }
         }
       }
     },
     "%lld%%" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
     },
     "1 (sequential)" : {
       "localizations" : {
@@ -345,6 +385,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 (последовательно)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1（顺序）"
           }
         }
       }
@@ -380,6 +426,12 @@
             "state" : "translated",
             "value" : "О приложении"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "简介"
+          }
         }
       }
     },
@@ -413,6 +465,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Аккаунт"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账号"
           }
         }
       }
@@ -448,6 +506,12 @@
             "state" : "translated",
             "value" : "В избранное"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加到收藏"
+          }
         }
       }
     },
@@ -481,6 +545,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Добавить в плейлист"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加到播放列表"
+          }
+        }
+      }
+    },
+    "Albums" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albums"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "专辑"
+          }
+        }
+      }
+    },
+    "All" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部"
           }
         }
       }
@@ -517,6 +619,12 @@
             "state" : "translated",
             "value" : "Все видео"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部视频"
+          }
         }
       }
     },
@@ -550,6 +658,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Разрешить мобильные данные"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许使用蜂窝数据"
           }
         }
       }
@@ -585,6 +699,28 @@
             "state" : "translated",
             "value" : "Уже установлена последняя версия (%@)"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已是最新版本（%@）"
+          }
+        }
+      }
+    },
+    "Artists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artists"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "艺人"
+          }
         }
       }
     },
@@ -618,6 +754,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Автовоспроизведение"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动播放下一个视频"
+          }
+        }
+      }
+    },
+    "Available offline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Available offline"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可离线播放"
           }
         }
       }
@@ -653,6 +811,12 @@
             "state" : "translated",
             "value" : "Лимит кэша"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缓存上限"
+          }
         }
       }
     },
@@ -687,6 +851,12 @@
             "state" : "translated",
             "value" : "Отмена"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
         }
       }
     },
@@ -720,6 +890,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Отменить выбор"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消选择"
           }
         }
       }
@@ -756,6 +932,12 @@
             "state" : "translated",
             "value" : "Канал"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "频道"
+          }
         }
       }
     },
@@ -789,6 +971,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Каналы"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "频道"
           }
         }
       }
@@ -825,6 +1013,12 @@
             "state" : "translated",
             "value" : "Каналы и видео, которые вы смотрели"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你看过的频道和视频"
+          }
         }
       }
     },
@@ -859,6 +1053,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Каналы, на которые вы подписаны"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你关注的频道"
           }
         }
       }
@@ -895,6 +1095,12 @@
             "state" : "translated",
             "value" : "Каналы, на которые вы подписаны на YouTube, появятся здесь."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你在 YouTube 上订阅的频道会显示在这里。"
+          }
         }
       }
     },
@@ -928,6 +1134,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Очистить"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除"
           }
         }
       }
@@ -963,6 +1175,12 @@
             "state" : "translated",
             "value" : "Очистить все"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部清除"
+          }
         }
       }
     },
@@ -996,6 +1214,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Очистить все логи"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除全部日志"
           }
         }
       }
@@ -1031,6 +1255,12 @@
             "state" : "translated",
             "value" : "Закрыть"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
         }
       }
     },
@@ -1064,6 +1294,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Закрыть полноэкранный плеер"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭全屏播放器"
+          }
+        }
+      }
+    },
+    "Close player" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close player"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭播放器"
           }
         }
       }
@@ -1100,6 +1352,12 @@
             "state" : "translated",
             "value" : "Комментарии"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "评论"
+          }
         }
       }
     },
@@ -1133,6 +1391,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Завершено"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成"
           }
         }
       }
@@ -1168,6 +1432,12 @@
             "state" : "translated",
             "value" : "Конвертировать"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "转换"
+          }
         }
       }
     },
@@ -1202,6 +1472,12 @@
             "state" : "translated",
             "value" : "Конвертировать аудио в MP3"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将音频转换为 MP3"
+          }
         }
       }
     },
@@ -1235,6 +1511,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Конвертировать видео в H.264"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将视频转换为 H.264"
           }
         }
       }
@@ -1271,6 +1553,12 @@
             "state" : "translated",
             "value" : "Cookies хранятся только в связке ключей."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookie 只保存在钥匙串中。"
+          }
         }
       }
     },
@@ -1305,6 +1593,12 @@
             "state" : "translated",
             "value" : "Копировать ссылку"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制链接"
+          }
         }
       }
     },
@@ -1338,6 +1632,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Копировать ссылку с временем"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制带当前时间的链接"
+          }
+        }
+      }
+    },
+    "Couldn't load this page" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't load this page"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法加载此页面"
           }
         }
       }
@@ -1374,6 +1690,12 @@
             "state" : "translated",
             "value" : "Не удалось загрузить видео"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法加载视频"
+          }
         }
       }
     },
@@ -1407,6 +1729,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Не удалось прочитать ссылку"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法读取此链接"
           }
         }
       }
@@ -1442,6 +1770,12 @@
             "state" : "translated",
             "value" : "Создать"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建"
+          }
         }
       }
     },
@@ -1475,6 +1809,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Создать плейлист"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建播放列表"
           }
         }
       }
@@ -1511,6 +1851,12 @@
             "state" : "translated",
             "value" : "Автор"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创作者"
+          }
         }
       }
     },
@@ -1544,6 +1890,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Текущий лог"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前日志"
           }
         }
       }
@@ -1580,6 +1932,12 @@
             "state" : "translated",
             "value" : "Используется %@. Когда кэш превышает лимит, старые загрузки удаляются для освобождения места.\n\nПараллельные фрагменты определяют, сколько HLS/DASH-сегментов yt-dlp загружает одновременно внутри одной загрузки — большие значения работают быстрее на хорошем соединении; значения выше 8 могут привести к ограничениям со стороны YouTube."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前已用 %@。缓存超过上限时，会先删除最早的下载。\n\n并行分片决定 yt-dlp 在单个下载内同时抓取多少个 HLS/DASH 分片——网络好时数值越大越快；超过 8 可能触发 YouTube 限速。"
+          }
         }
       }
     },
@@ -1613,6 +1971,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сейчас используется: %@. Когда кэш превышает лимит, самые старые загрузки удаляются.\n\nПредзагрузка начинает фоновую загрузку следующего видео в очереди сразу после начала воспроизведения текущего, чтобы нажатие «Далее» срабатывало мгновенно. Отключите для экономии трафика.\n\nПараллельные фрагменты определяют, сколько чанков HLS/DASH yt-dlp скачивает одновременно в рамках одной загрузки — более высокие значения быстрее при хорошем соединении; значения выше 8 могут вызвать ограничение со стороны YouTube."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前已用 %@。缓存超过上限时，会先删除最早的下载。\n\n预取会在当前视频开始播放后立即在后台下载队列中的下一个视频，点“下一个”即刻播放。关闭可节省流量。\n\n并行分片决定 yt-dlp 在单个下载内同时抓取多少个 HLS/DASH 分片——网络好时数值越大越快；超过 8 可能触发 YouTube 限速。"
           }
         }
       }
@@ -1649,6 +2013,12 @@
             "state" : "translated",
             "value" : "Дата"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期"
+          }
         }
       }
     },
@@ -1684,6 +2054,12 @@
             "state" : "translated",
             "value" : "Дата загрузки"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载日期"
+          }
         }
       }
     },
@@ -1717,6 +2093,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Удалить"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
           }
         }
       }
@@ -1752,6 +2134,12 @@
             "state" : "translated",
             "value" : "Удалить %lld %@?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除 %lld 个%@？"
+          }
         }
       }
     },
@@ -1785,6 +2173,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Удалить все файлы логов?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除全部日志文件？"
           }
         }
       }
@@ -1820,6 +2214,12 @@
             "state" : "translated",
             "value" : "Удалить из загрузок"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从已下载中删除"
+          }
         }
       }
     },
@@ -1854,6 +2254,12 @@
             "state" : "translated",
             "value" : "Удалить это видео?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除这个视频？"
+          }
         }
       }
     },
@@ -1887,6 +2293,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Описание"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "说明"
           }
         }
       }
@@ -1923,6 +2335,12 @@
             "state" : "translated",
             "value" : "Снять выделение"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消全选"
+          }
         }
       }
     },
@@ -1956,6 +2374,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Диагностика"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "诊断"
           }
         }
       }
@@ -1991,6 +2415,12 @@
             "state" : "translated",
             "value" : "Готово"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
+          }
         }
       }
     },
@@ -2024,6 +2454,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Скачать"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载"
+          }
+        }
+      }
+    },
+    "Downloaded" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloaded"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已下载"
           }
         }
       }
@@ -2059,40 +2511,11 @@
             "state" : "translated",
             "value" : "Загрузка"
           }
-        }
-      }
-    },
-    "Downloading · see Downloads tab" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lade … · siehe Downloads-Tab"
-          }
         },
-        "en" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Downloading · see Downloads tab"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Descargando · ver pestaña Descargas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Téléchargement · voir l’onglet Téléchargements"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Загрузка · см. вкладку «Загрузки»"
+            "value" : "正在下载"
           }
         }
       }
@@ -2129,6 +2552,12 @@
             "state" : "translated",
             "value" : "Загрузка %@ %lld%%"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载%@ %lld%%"
+          }
         }
       }
     },
@@ -2163,6 +2592,53 @@
             "state" : "translated",
             "value" : "Загрузка %lld%%"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载 %lld%%"
+          }
+        }
+      }
+    },
+    "Downloading · see Downloads tab" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lade … · siehe Downloads-Tab"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloading · see Downloads tab"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargando · ver pestaña Descargas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Téléchargement · voir l’onglet Téléchargements"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка · см. вкладку «Загрузки»"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载 · 见“下载”标签页"
+          }
         }
       }
     },
@@ -2196,6 +2672,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Загрузки"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载"
           }
         }
       }
@@ -2232,6 +2714,12 @@
             "state" : "translated",
             "value" : "Длительность"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时长"
+          }
         }
       }
     },
@@ -2266,6 +2754,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ошибка"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "错误"
+          }
+        }
+      }
+    },
+    "Explore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "探索"
           }
         }
       }
@@ -2302,6 +2812,12 @@
             "state" : "translated",
             "value" : "Ошибка"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "失败"
+          }
         }
       }
     },
@@ -2335,6 +2851,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Получить"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "抓取"
           }
         }
       }
@@ -2371,6 +2893,12 @@
             "state" : "translated",
             "value" : "Размер файла"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件大小"
+          }
         }
       }
     },
@@ -2406,6 +2934,12 @@
             "state" : "translated",
             "value" : "Поиск видео, каналов и плейлистов."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查找视频、频道和播放列表。"
+          }
         }
       }
     },
@@ -2439,6 +2973,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Найти…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查找…"
           }
         }
       }
@@ -2474,6 +3014,12 @@
             "state" : "translated",
             "value" : "Завершение входа…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在完成登录…"
+          }
         }
       }
     },
@@ -2508,39 +3054,11 @@
             "state" : "translated",
             "value" : "Формат"
           }
-        }
-      }
-    },
-    "FreeTube — see App/RootView.swift" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FreeTube"
-          }
         },
-        "en" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "FreeTube"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FreeTube"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FreeTube"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FreeTube"
+            "value" : "格式"
           }
         }
       }
@@ -2576,6 +3094,12 @@
             "state" : "translated",
             "value" : "FreeTube — это персональный YouTube-клиент только для установки в обход App Store. Использует YouTubeKit (по cookies, без ключа Google API) и yt-dlp для загрузок. YouTube может в любой момент изменить свой внутренний API — пожалуйста, проявляйте терпение, когда что-то ломается."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube 是仅供个人/侧载使用的 YouTube 客户端。它使用 YouTubeKit（基于 Cookie，不需要 Google API 密钥）并通过 yt-dlp 下载。YouTube 随时可能更改内部 API——出问题时请多些耐心。"
+          }
         }
       }
     },
@@ -2609,6 +3133,84 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FreeTube использует `WKWebView` для получения cookies. Они хранятся только в связке ключей."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube 通过 `WKWebView` 获取 Cookie，并且只保存在钥匙串中。"
+          }
+        }
+      }
+    },
+    "FreeTube — see App/RootView.swift" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeTube"
+          }
+        }
+      }
+    },
+    "Go to album" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to album"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前往专辑"
+          }
+        }
+      }
+    },
+    "Go to artist" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to artist"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前往艺人"
           }
         }
       }
@@ -2644,6 +3246,12 @@
             "state" : "translated",
             "value" : "H.264 воспроизводится на всех платформах Apple. MP3 нужен для аудио, которым вы поделитесь с приложениями, не принимающими AAC / Opus. Конвертация выполняется на устройстве через FFmpeg и может занять несколько секунд."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "H.264 可在所有 Apple 平台播放。MP3 适合分享给不支持 AAC/Opus 的应用。转换通过 FFmpeg 在设备上完成，可能需要几秒钟。"
+          }
         }
       }
     },
@@ -2677,6 +3285,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "История"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "历史记录"
           }
         }
       }
@@ -2713,6 +3327,12 @@
             "state" : "translated",
             "value" : "Главная"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首页"
+          }
         }
       }
     },
@@ -2747,6 +3367,52 @@
             "state" : "translated",
             "value" : "Если видео перестали загружаться, нажмите, чтобы удалить сохранённые cookies и токен посетителя. Следующее воспроизведение начнётся анонимно."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果视频无法加载，点此清除已保存的 Cookie 和访客令牌。下一次播放将以匿名身份进行。"
+          }
+        }
+      }
+    },
+    "LIVE" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LIVE"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LIVE"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EN DIRECTO"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EN DIRECT"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LIVE"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直播"
+          }
         }
       }
     },
@@ -2780,6 +3446,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Последнее обновление"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次更新"
           }
         }
       }
@@ -2816,6 +3488,12 @@
             "state" : "translated",
             "value" : "Новые"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最新"
+          }
         }
       }
     },
@@ -2850,6 +3528,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Последние из подписок"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "订阅频道的最新内容"
           }
         }
       }
@@ -2886,6 +3570,12 @@
             "state" : "translated",
             "value" : "Новые видео"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最新视频"
+          }
         }
       }
     },
@@ -2921,6 +3611,12 @@
             "state" : "translated",
             "value" : "Последние видео из ваших подписок."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你订阅频道的最新视频。"
+          }
         }
       }
     },
@@ -2954,6 +3650,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Свернуть"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收起"
           }
         }
       }
@@ -2990,6 +3692,12 @@
             "state" : "translated",
             "value" : "Меньше деталей"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收起详情"
+          }
         }
       }
     },
@@ -3023,6 +3731,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Библиотека"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "媒体库"
           }
         }
       }
@@ -3059,6 +3773,12 @@
             "state" : "translated",
             "value" : "Понравившиеся видео"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顶过的视频"
+          }
         }
       }
     },
@@ -3092,6 +3812,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ссылка"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "链接"
           }
         }
       }
@@ -3128,39 +3854,11 @@
             "state" : "translated",
             "value" : "Прямой эфир"
           }
-        }
-      }
-    },
-    "LIVE" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "LIVE"
-          }
         },
-        "en" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LIVE"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EN DIRECTO"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EN DIRECT"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "LIVE"
+            "value" : "直播"
           }
         }
       }
@@ -3195,6 +3893,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Загрузка деталей…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载详情…"
           }
         }
       }
@@ -3231,6 +3935,12 @@
             "state" : "translated",
             "value" : "Загрузка…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载…"
+          }
         }
       }
     },
@@ -3265,6 +3975,12 @@
             "state" : "translated",
             "value" : "Ещё"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多"
+          }
         }
       }
     },
@@ -3298,6 +4014,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Подробнее"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多详情"
           }
         }
       }
@@ -3334,6 +4056,12 @@
             "state" : "translated",
             "value" : "Самые просматриваемые"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "观看最多优先"
+          }
         }
       }
     },
@@ -3369,6 +4097,44 @@
             "state" : "translated",
             "value" : "Фильмы"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电影"
+          }
+        }
+      }
+    },
+    "Music" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音乐"
+          }
+        }
+      }
+    },
+    "Music queue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music queue"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音乐队列"
+          }
         }
       }
     },
@@ -3402,6 +4168,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Навигация"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导航"
           }
         }
       }
@@ -3438,6 +4210,12 @@
             "state" : "translated",
             "value" : "Ошибка сети"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网络错误"
+          }
         }
       }
     },
@@ -3472,6 +4250,12 @@
             "state" : "translated",
             "value" : "Новый плейлист"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建播放列表"
+          }
         }
       }
     },
@@ -3505,6 +4289,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Новый плейлист…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建播放列表…"
           }
         }
       }
@@ -3541,6 +4331,12 @@
             "state" : "translated",
             "value" : "Сначала новые"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最新优先"
+          }
         }
       }
     },
@@ -3574,6 +4370,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Следующее"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一个"
           }
         }
       }
@@ -3610,6 +4412,12 @@
             "state" : "translated",
             "value" : "Канал не обнаружен"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未检测到频道"
+          }
         }
       }
     },
@@ -3644,6 +4452,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Нет загрузок"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有下载"
           }
         }
       }
@@ -3680,6 +4494,12 @@
             "state" : "translated",
             "value" : "Нет плейлистов"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有播放列表"
+          }
         }
       }
     },
@@ -3715,6 +4535,12 @@
             "state" : "translated",
             "value" : "Нет подписок"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有订阅"
+          }
         }
       }
     },
@@ -3748,6 +4574,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Нет (только аудио)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无（仅音频）"
           }
         }
       }
@@ -3783,6 +4615,12 @@
             "state" : "translated",
             "value" : "Нет (видео без звука)"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无（无声视频）"
+          }
         }
       }
     },
@@ -3816,6 +4654,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Нет (использовать встроенное аудио видео)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无（使用视频自带音频）"
           }
         }
       }
@@ -3852,6 +4696,12 @@
             "state" : "translated",
             "value" : "Не выполнен вход"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未登录"
+          }
         }
       }
     },
@@ -3886,6 +4736,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Здесь пусто"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这里什么都没有"
           }
         }
       }
@@ -3922,6 +4778,12 @@
             "state" : "translated",
             "value" : "Здесь пока пусто"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这里暂时没有内容"
+          }
         }
       }
     },
@@ -3957,6 +4819,12 @@
             "state" : "translated",
             "value" : "Ничего нового"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有新内容"
+          }
         }
       }
     },
@@ -3990,6 +4858,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ОК"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
@@ -4025,6 +4899,12 @@
             "state" : "translated",
             "value" : "Открыть в браузере"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在浏览器中打开"
+          }
         }
       }
     },
@@ -4058,6 +4938,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Открыть в…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用其他应用打开…"
           }
         }
       }
@@ -4093,6 +4979,12 @@
             "state" : "translated",
             "value" : "Параллельные фрагменты"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "并行分片"
+          }
         }
       }
     },
@@ -4126,6 +5018,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Вставьте ссылку…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粘贴链接…"
           }
         }
       }
@@ -4161,6 +5059,12 @@
             "state" : "translated",
             "value" : "Пауза"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂停"
+          }
         }
       }
     },
@@ -4195,6 +5099,12 @@
             "state" : "translated",
             "value" : "Приостановлено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已暂停"
+          }
         }
       }
     },
@@ -4228,6 +5138,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Воспроизвести"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
           }
         }
       }
@@ -4264,6 +5180,44 @@
             "state" : "translated",
             "value" : "Слушать всё"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部播放"
+          }
+        }
+      }
+    },
+    "Play next" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play next"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一个播放"
+          }
+        }
+      }
+    },
+    "Play top songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play top songs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放热门歌曲"
+          }
         }
       }
     },
@@ -4297,6 +5251,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Воспроизведение"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
+          }
+        }
+      }
+    },
+    "Playback quality" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback quality"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放画质"
           }
         }
       }
@@ -4333,6 +5309,28 @@
             "state" : "translated",
             "value" : "Просмотры"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放次数"
+          }
+        }
+      }
+    },
+    "Playing next: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing next: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接下来播放：%@"
+          }
         }
       }
     },
@@ -4367,6 +5365,12 @@
             "state" : "translated",
             "value" : "Название плейлиста"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放列表标题"
+          }
         }
       }
     },
@@ -4400,6 +5404,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Плейлисты"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放列表"
           }
         }
       }
@@ -4436,6 +5446,12 @@
             "state" : "translated",
             "value" : "Плейлисты, которые вы создаёте на YouTube, появятся здесь."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你在 YouTube 上创建的播放列表会显示在这里。"
+          }
         }
       }
     },
@@ -4470,6 +5486,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Популярные"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "热门"
           }
         }
       }
@@ -4506,6 +5528,12 @@
             "state" : "translated",
             "value" : "Популярные видео"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "热门视频"
+          }
         }
       }
     },
@@ -4540,6 +5568,12 @@
             "state" : "translated",
             "value" : "Качество"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首选画质"
+          }
         }
       }
     },
@@ -4573,6 +5607,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Предзагрузка следующего видео"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预取下一个视频"
           }
         }
       }
@@ -4609,6 +5649,12 @@
             "state" : "translated",
             "value" : "Подготовка…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在准备…"
+          }
         }
       }
     },
@@ -4642,6 +5688,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Предпросмотр"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预览"
           }
         }
       }
@@ -4677,6 +5729,12 @@
             "state" : "translated",
             "value" : "Предыдущее"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上一个"
+          }
         }
       }
     },
@@ -4711,6 +5769,12 @@
             "state" : "translated",
             "value" : "Приватный"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "私享"
+          }
         }
       }
     },
@@ -4744,6 +5808,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Приватный плейлист"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "私享播放列表"
           }
         }
       }
@@ -4780,6 +5850,12 @@
             "state" : "translated",
             "value" : "Обработка видео…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在处理视频…"
+          }
         }
       }
     },
@@ -4814,6 +5890,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Обработка…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在处理…"
           }
         }
       }
@@ -4850,6 +5932,12 @@
             "state" : "translated",
             "value" : "Потяните вниз для обновления или войдите, чтобы увидеть свою ленту."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下拉刷新，或登录后查看你的首页推荐。"
+          }
         }
       }
     },
@@ -4885,6 +5973,28 @@
             "state" : "translated",
             "value" : "Потяните, чтобы попробовать снова."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下拉重试。"
+          }
+        }
+      }
+    },
+    "Quality" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quality"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画质"
+          }
         }
       }
     },
@@ -4918,6 +6028,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "В очереди"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已排队"
+          }
+        }
+      }
+    },
+    "Radio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电台"
           }
         }
       }
@@ -4954,6 +6086,12 @@
             "state" : "translated",
             "value" : "Ограничение YouTube"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "被 YouTube 限速"
+          }
         }
       }
     },
@@ -4987,6 +6125,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Чтение ссылки…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取链接…"
           }
         }
       }
@@ -5022,6 +6166,12 @@
             "state" : "translated",
             "value" : "Готово · %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "就绪 · %@"
+          }
         }
       }
     },
@@ -5056,6 +6206,12 @@
             "state" : "translated",
             "value" : "Недавнее"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近"
+          }
         }
       }
     },
@@ -5089,6 +6245,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Недавние запросы"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近搜索"
           }
         }
       }
@@ -5125,6 +6287,12 @@
             "state" : "translated",
             "value" : "Недавно просмотренные"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近观看"
+          }
         }
       }
     },
@@ -5158,6 +6326,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Удалить"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除"
           }
         }
       }
@@ -5193,6 +6367,12 @@
             "state" : "translated",
             "value" : "Удалить загрузку"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除已下载文件"
+          }
         }
       }
     },
@@ -5226,6 +6406,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Убрать из избранного"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从收藏中移除"
           }
         }
       }
@@ -5261,6 +6447,12 @@
             "state" : "translated",
             "value" : "Ответить"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回复"
+          }
         }
       }
     },
@@ -5294,6 +6486,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сбросить"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置"
           }
         }
       }
@@ -5329,6 +6527,12 @@
             "state" : "translated",
             "value" : "Сбросить сессию"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置会话"
+          }
         }
       }
     },
@@ -5363,6 +6567,12 @@
             "state" : "translated",
             "value" : "Сбросить сессию?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置会话？"
+          }
         }
       }
     },
@@ -5396,6 +6606,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Безопасный поиск"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "受限搜索模式"
+          }
+        }
+      }
+    },
+    "Results" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Results"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结果"
           }
         }
       }
@@ -5432,6 +6664,12 @@
             "state" : "translated",
             "value" : "Повторить"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
         }
       }
     },
@@ -5465,6 +6703,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Показать в Finder"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在访达中显示"
           }
         }
       }
@@ -5500,6 +6744,12 @@
             "state" : "translated",
             "value" : "Сохранить"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
         }
       }
     },
@@ -5533,6 +6783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сохранять логи в файл"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将日志保存到文件"
           }
         }
       }
@@ -5568,6 +6824,12 @@
             "state" : "translated",
             "value" : "Сохранено на устройстве"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已保存到设备"
+          }
         }
       }
     },
@@ -5601,6 +6863,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сохранено в %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已保存到 %@"
           }
         }
       }
@@ -5636,40 +6904,11 @@
             "state" : "translated",
             "value" : "Поиск"
           }
-        }
-      }
-    },
-    "Search history" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suchverlauf"
-          }
         },
-        "en" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search history"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Historial de búsqueda"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Historique de recherche"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "История поиска"
+            "value" : "搜索"
           }
         }
       }
@@ -5706,6 +6945,69 @@
             "state" : "translated",
             "value" : "Поиск на YouTube"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索 YouTube"
+          }
+        }
+      }
+    },
+    "Search history" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchverlauf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search history"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historial de búsqueda"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique de recherche"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "История поиска"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索历史"
+          }
+        }
+      }
+    },
+    "Search songs, albums, artists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search songs, albums, artists"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索歌曲、专辑、艺人"
+          }
         }
       }
     },
@@ -5739,6 +7041,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Выбрать"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择"
           }
         }
       }
@@ -5775,6 +7083,12 @@
             "state" : "translated",
             "value" : "Выбрать всё"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全选"
+          }
         }
       }
     },
@@ -5810,6 +7124,12 @@
             "state" : "translated",
             "value" : "Сессия истекла"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "会话已过期"
+          }
         }
       }
     },
@@ -5843,6 +7163,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Настройки"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
           }
         }
       }
@@ -5878,6 +7204,12 @@
             "state" : "translated",
             "value" : "Настройки…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置…"
+          }
         }
       }
     },
@@ -5912,6 +7244,12 @@
             "state" : "translated",
             "value" : "Поделиться"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
         }
       }
     },
@@ -5945,6 +7283,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Поделиться последним логом…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享最新日志…"
           }
         }
       }
@@ -5981,6 +7325,28 @@
             "state" : "translated",
             "value" : "Shorts"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts"
+          }
+        }
+      }
+    },
+    "Show Music tab" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Music tab"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示“音乐”标签页"
+          }
         }
       }
     },
@@ -6014,6 +7380,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Показать в Finder"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在访达中显示"
           }
         }
       }
@@ -6049,6 +7421,12 @@
             "state" : "translated",
             "value" : "Показать меньше"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收起"
+          }
         }
       }
     },
@@ -6082,6 +7460,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Показать папку логов"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示日志文件夹"
+          }
+        }
+      }
+    },
+    "Show subscription feed tab" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show subscription feed tab"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示订阅动态标签页"
           }
         }
       }
@@ -6118,6 +7518,12 @@
             "state" : "translated",
             "value" : "Перемешать"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "随机播放"
+          }
         }
       }
     },
@@ -6152,39 +7558,11 @@
             "state" : "translated",
             "value" : "Войти"
           }
-        }
-      }
-    },
-    "Sign in to access your watch history, playlists, liked videos, and Watch Later." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Melde dich an, um auf deinen Verlauf, deine Playlists, gelikten Videos und „Später ansehen“ zuzugreifen."
-          }
         },
-        "en" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sign in to access your watch history, playlists, liked videos, and Watch Later."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inicia sesión para acceder al historial, listas, vídeos que te gustaron y Ver más tarde."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connectez-vous pour accéder à votre historique, vos playlists, vos vidéos aimées et « À regarder plus tard »."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Войдите, чтобы получить доступ к истории просмотров, плейлистам, понравившимся видео и Watch Later."
+            "value" : "登录"
           }
         }
       }
@@ -6220,6 +7598,68 @@
             "state" : "translated",
             "value" : "Войти в YouTube"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录 YouTube"
+          }
+        }
+      }
+    },
+    "Sign in to access your watch history, playlists, liked videos, and Watch Later." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melde dich an, um auf deinen Verlauf, deine Playlists, gelikten Videos und „Später ansehen“ zuzugreifen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to access your watch history, playlists, liked videos, and Watch Later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia sesión para acceder al historial, listas, vídeos que te gustaron y Ver más tarde."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous pour accéder à votre historique, vos playlists, vos vidéos aimées et « À regarder plus tard »."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войдите, чтобы получить доступ к истории просмотров, плейлистам, понравившимся видео и Watch Later."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录后可查看观看历史、播放列表、顶过的视频和稍后观看。"
+          }
+        }
+      }
+    },
+    "Sign in to see your liked songs, playlists, albums and listening history from YouTube Music." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to see your liked songs, playlists, albums and listening history from YouTube Music."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录后可查看你在 YouTube Music 上顶过的歌曲、播放列表、专辑和收听历史。"
+          }
         }
       }
     },
@@ -6253,6 +7693,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Выйти"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出登录"
           }
         }
       }
@@ -6288,6 +7734,12 @@
             "state" : "translated",
             "value" : "Ошибка входа"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录失败"
+          }
         }
       }
     },
@@ -6321,6 +7773,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Назад на 15 с"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "后退 15 秒"
           }
         }
       }
@@ -6356,6 +7814,28 @@
             "state" : "translated",
             "value" : "Вперёд на 15 с"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前进 15 秒"
+          }
+        }
+      }
+    },
+    "Songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Songs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "歌曲"
+          }
         }
       }
     },
@@ -6390,6 +7870,12 @@
             "state" : "translated",
             "value" : "Сортировка"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排序方式"
+          }
         }
       }
     },
@@ -6423,6 +7909,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Исходный кодек: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "源编码：%@"
+          }
+        }
+      }
+    },
+    "Start radio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start radio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始电台"
           }
         }
       }
@@ -6459,6 +7967,12 @@
             "state" : "translated",
             "value" : "Не удалось получить поток"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解析视频流失败"
+          }
         }
       }
     },
@@ -6493,6 +8007,12 @@
             "state" : "translated",
             "value" : "Потоковая передача…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在串流…"
+          }
         }
       }
     },
@@ -6526,6 +8046,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Подписаться"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "订阅"
           }
         }
       }
@@ -6562,6 +8088,12 @@
             "state" : "translated",
             "value" : "Подпишитесь на каналы, чтобы видеть здесь их новые видео."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "订阅频道后，这里会显示它们的最新视频。"
+          }
         }
       }
     },
@@ -6596,6 +8128,12 @@
             "state" : "translated",
             "value" : "Вы подписаны"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已订阅"
+          }
         }
       }
     },
@@ -6629,6 +8167,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Подписки"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "订阅"
           }
         }
       }
@@ -6665,6 +8209,12 @@
             "state" : "translated",
             "value" : "Нажмите на видео, чтобы воспроизвести — оно автоматически сохранится здесь."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点按视频即可播放——它会自动保存到这里。"
+          }
         }
       }
     },
@@ -6698,6 +8248,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Это может занять несколько секунд при первой загрузке yt-dlp."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yt-dlp 首次加载可能需要几秒钟。"
           }
         }
       }
@@ -6734,6 +8290,12 @@
             "state" : "translated",
             "value" : "У этого канала нет публичных плейлистов."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此频道没有公开的播放列表。"
+          }
         }
       }
     },
@@ -6768,39 +8330,27 @@
             "state" : "translated",
             "value" : "Это окончательно удалит выбранный файл%@ с устройства."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将从设备上永久删除所选文件%@。"
+          }
         }
       }
     },
-    "This removes every file under Documents/Logs/. If \"Save logs to file\" is on, a fresh log file will be opened for new entries." : {
+    "This removes every saved log file. If \"Save logs to file\" is on, a fresh log file will be opened for new entries." : {
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dadurch werden alle Dateien unter Documents/Logs/ entfernt. Wenn „Logs in Datei speichern“ aktiviert ist, wird eine neue Logdatei für neue Einträge geöffnet."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This removes every file under Documents/Logs/. If \"Save logs to file\" is on, a fresh log file will be opened for new entries."
+            "value" : "This removes every saved log file. If \"Save logs to file\" is on, a fresh log file will be opened for new entries."
           }
         },
-        "es" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esto elimina todos los archivos en Documents/Logs/. Si «Guardar registros en archivo» está activado, se abrirá un nuevo archivo de registro para las nuevas entradas."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ceci supprime tous les fichiers dans Documents/Logs/. Si « Enregistrer les journaux dans un fichier » est activé, un nouveau fichier journal sera ouvert pour les nouvelles entrées."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Это удалит все файлы в Documents/Logs/. Если включён параметр «Сохранять логи в файл», для новых записей будет создан новый файл лога."
+            "value" : "这会删除所有已保存的日志文件。如果“将日志保存到文件”已开启，将新建一个日志文件继续记录。"
           }
         }
       }
@@ -6836,6 +8386,12 @@
             "state" : "translated",
             "value" : "Это завершит сессию и очистит сохранённые cookies."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这会退出登录并清除缓存的 Cookie。"
+          }
         }
       }
     },
@@ -6869,6 +8425,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Название"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标题"
+          }
+        }
+      }
+    },
+    "Top result" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top result"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最佳结果"
           }
         }
       }
@@ -6904,6 +8482,12 @@
             "state" : "translated",
             "value" : "Очередь передачи"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "传输队列"
+          }
         }
       }
     },
@@ -6937,6 +8521,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Перевести"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻译"
           }
         }
       }
@@ -6972,6 +8562,12 @@
             "state" : "translated",
             "value" : "Устранение неполадок"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "故障排除"
+          }
         }
       }
     },
@@ -7005,6 +8601,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Попробовать ещё раз"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再试一次"
           }
         }
       }
@@ -7041,6 +8643,12 @@
             "state" : "translated",
             "value" : "Без лимита"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不限"
+          }
         }
       }
     },
@@ -7076,6 +8684,12 @@
             "state" : "translated",
             "value" : "Далее в очереди"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接下来播放"
+          }
         }
       }
     },
@@ -7109,6 +8723,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Обновить сейчас"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "立即更新"
           }
         }
       }
@@ -7144,109 +8764,11 @@
             "state" : "translated",
             "value" : "Обновлено до %@"
           }
-        }
-      }
-    },
-    "v%@ — %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%@ — %@"
-          }
         },
-        "en" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "v%@ — %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%@ — %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%@ — %@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "версия %@ — %@"
-          }
-        }
-      }
-    },
-    "v%@ (%@) — [freetube.io](https://freetube.io)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
-          }
-        }
-      }
-    },
-    "v0.1 — %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v0.1 — %@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v0.1 — %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v0.1 — %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v0.1 — %@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "v0.1 — %@"
+            "value" : "已更新到 %@"
           }
         }
       }
@@ -7281,6 +8803,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Версия"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本"
           }
         }
       }
@@ -7317,6 +8845,12 @@
             "state" : "translated",
             "value" : "Видео недоступно"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频不可用"
+          }
         }
       }
     },
@@ -7351,6 +8885,12 @@
             "state" : "translated",
             "value" : "Видео"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频"
+          }
         }
       }
     },
@@ -7384,6 +8924,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Видео загружаются на устройство перед воспроизведением. Более низкое качество экономит место и загружается быстрее."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频会先下载到设备再播放。较低画质更省空间、下载更快。"
           }
         }
       }
@@ -7420,6 +8966,12 @@
             "state" : "translated",
             "value" : "Просмотры"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "观看次数"
+          }
         }
       }
     },
@@ -7454,6 +9006,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "История просмотров"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "观看历史"
           }
         }
       }
@@ -7490,39 +9048,27 @@
             "state" : "translated",
             "value" : "Посмотреть позже"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "稍后观看"
+          }
         }
       }
     },
-    "When enabled, every app launch creates a new log file under Documents/Logs/ (visible in the Files app). Each file starts with the app version, build, iOS version, and device model, followed by timestamped entries from FreeTube's subsystem. Useful for sharing diagnostics with the developer when something breaks in TestFlight or sideload installs." : {
+    "When enabled, every app launch creates a new log file in the app's private Application Support folder (use Share to export it). Each file starts with the app version, build, iOS version, and device model, followed by timestamped entries from FreeTube's subsystem. URLs are logged without query strings and cookie values are never written. Useful for sharing diagnostics with the developer when something breaks in TestFlight or sideload installs." : {
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wenn aktiviert, wird bei jedem App-Start eine neue Logdatei unter Documents/Logs/ erstellt (in der Dateien-App sichtbar). Jede Datei beginnt mit App-Version, Build, iOS-Version und Gerätemodell, gefolgt von zeitgestempelten Einträgen aus dem Subsystem von FreeTube. Hilfreich, um Diagnosen mit dem Entwickler zu teilen, wenn etwas bei TestFlight- oder Sideload-Installationen schiefläuft."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "When enabled, every app launch creates a new log file under Documents/Logs/ (visible in the Files app). Each file starts with the app version, build, iOS version, and device model, followed by timestamped entries from FreeTube's subsystem. Useful for sharing diagnostics with the developer when something breaks in TestFlight or sideload installs."
+            "value" : "When enabled, every app launch creates a new log file in the app's private Application Support folder (use Share to export it). Each file starts with the app version, build, iOS version, and device model, followed by timestamped entries from FreeTube's subsystem. URLs are logged without query strings and cookie values are never written. Useful for sharing diagnostics with the developer when something breaks in TestFlight or sideload installs."
           }
         },
-        "es" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cuando está activado, cada inicio de la app crea un nuevo archivo de registro en Documents/Logs/ (visible en la app Archivos). Cada archivo comienza con la versión de la app, build, versión de iOS y modelo del dispositivo, seguidos de entradas con marca de tiempo del subsistema de FreeTube. Útil para compartir diagnósticos con el desarrollador cuando algo falla en TestFlight o instalaciones sideload."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lorsque cette option est activée, chaque lancement de l’app crée un nouveau fichier journal dans Documents/Logs/ (visible dans l’app Fichiers). Chaque fichier commence par la version de l’app, le build, la version d’iOS et le modèle de l’appareil, suivis d’entrées horodatées du sous-système de FreeTube. Utile pour partager des diagnostics avec le développeur lorsque quelque chose ne fonctionne pas en TestFlight ou en sideload."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Когда включено, при каждом запуске приложения создаётся новый файл лога в Documents/Logs/ (виден в приложении «Файлы»). Каждый файл начинается с версии приложения, сборки, версии iOS и модели устройства, после чего следуют записи с метками времени из подсистемы FreeTube. Полезно для отправки диагностики разработчику, когда что-то ломается в TestFlight или sideload-установках."
+            "value" : "开启后，每次启动应用都会在应用私有的 Application Support 文件夹中新建一个日志文件（用“分享”导出）。文件开头记录应用版本、构建号、iOS 版本和设备型号，之后是 FreeTube 子系统带时间戳的条目。URL 不记录查询参数，Cookie 值绝不会写入。在 TestFlight 或侧载安装出问题时，可用来向开发者提供诊断信息。"
           }
         }
       }
@@ -7559,6 +9105,12 @@
             "state" : "translated",
             "value" : "Скачивать только по Wi-Fi"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅在 Wi-Fi 下下载"
+          }
         }
       }
     },
@@ -7592,6 +9144,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Будет сохранено"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将保存"
           }
         }
       }
@@ -7627,6 +9185,12 @@
             "state" : "translated",
             "value" : "Стирает сохранённые cookies и токен посетителя. Следующее воспроизведение начнётся анонимно. Используйте, если воспроизведение или вход застряли."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除已保存的 Cookie 和访客令牌。下一次播放将以匿名身份进行。播放或登录卡住时可以试试。"
+          }
         }
       }
     },
@@ -7660,6 +9224,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Работает с YouTube, Vimeo, X/Twitter, TikTok, SoundCloud и ~2 000 других сайтов, поддерживаемых yt-dlp."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持 YouTube、Vimeo、X/Twitter、TikTok、SoundCloud 以及 yt-dlp 支持的约 2000 个其他网站。"
           }
         }
       }
@@ -7695,74 +9265,11 @@
             "state" : "translated",
             "value" : "У вас пока нет плейлистов. Нажмите «Создать плейлист» выше, чтобы создать его."
           }
-        }
-      }
-    },
-    "Your playlists" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deine Playlists"
-          }
         },
-        "en" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your playlists"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tus listas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vos playlists"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваши плейлисты"
-          }
-        }
-      }
-    },
-    "Your videos" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deine Videos"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your videos"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tus vídeos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vos vidéos"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваши видео"
+            "value" : "你还没有播放列表。点按上方的“新建播放列表”来创建一个。"
           }
         }
       }
@@ -7799,6 +9306,12 @@
             "state" : "translated",
             "value" : "Ваш канал на YouTube"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的 YouTube 频道"
+          }
         }
       }
     },
@@ -7834,6 +9347,231 @@
             "state" : "translated",
             "value" : "Идентификатор вашего YouTube-канала не был возвращён в ответе библиотеки. Попробуйте обновить экран библиотеки."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "媒体库响应中没有返回你的 YouTube 频道 ID。请尝试刷新“媒体库”页面。"
+          }
+        }
+      }
+    },
+    "Your music library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your music library"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的音乐库"
+          }
+        }
+      }
+    },
+    "Your playlists" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Playlists"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your playlists"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus listas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos playlists"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваши плейлисты"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的播放列表"
+          }
+        }
+      }
+    },
+    "Your videos" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus vídeos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos vidéos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваши видео"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的视频"
+          }
+        }
+      }
+    },
+    "v%@ (%@) — [freetube.io](https://freetube.io)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%1$@ (%2$@) — [freetube.io](https://freetube.io)"
+          }
+        }
+      }
+    },
+    "v%@ — %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ — %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ — %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ — %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ — %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "версия %@ — %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ — %@"
+          }
+        }
+      }
+    },
+    "v0.1 — %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v0.1 — %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v0.1 — %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v0.1 — %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v0.1 — %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v0.1 — %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v0.1 — %@"
+          }
         }
       }
     },
@@ -7867,6 +9605,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "yt-dlp — это движок, который получает URL потоков YouTube. FreeTube автоматически обновляет его каждые 7 дней из официального релиза на GitHub. Нажмите «Обновить сейчас», если видео перестало воспроизводиться — новые версии часто устраняют поломки, вызванные изменениями API YouTube."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yt-dlp 是解析 YouTube 视频流地址的引擎。FreeTube 每 7 天会从官方 GitHub 发布页自动更新一次。视频无法播放时可点“立即更新”——新版本通常能修复 YouTube API 变动导致的故障。"
+          }
+        }
+      }
+    },
+    "“%@” will be permanently removed from your device." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%@“ wird endgültig von Ihrem Gerät entfernt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” will be permanently removed from your device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«%@» se eliminará permanentemente de tu dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "« %@ » sera définitivement supprimé de votre appareil."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«%@» будет окончательно удалён с устройства."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@”将从你的设备上永久删除。"
           }
         }
       }
