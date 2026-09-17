@@ -11,6 +11,7 @@ import UIKit
 struct HomeScreen: View {
     let searchActivation: Int
     let navigationRequest: AppNavigationRequest?
+    var embedded = false
     @State private var searchModel = SearchViewModel()
     @State private var path = NavigationPath()
     @State private var isSearchPresented = false
@@ -21,8 +22,17 @@ struct HomeScreen: View {
     /// host can do the upsert in `runSearch` (the field's submit fires on this view).
     @Query(sort: \SearchHistoryEntry.searchedAt, order: .reverse) private var history: [SearchHistoryEntry]
 
+    @ViewBuilder
     var body: some View {
-        NavigationStack(path: $path) {
+        if embedded {
+            searchContent
+                .task { await focusSearch() }
+        } else {
+            NavigationStack(path: $path) { searchContent }
+        }
+    }
+
+    private var searchContent: some View {
             VStack(spacing: 0) {
                 if MacIntegration.isRunningOnMac {
                     MacInlineSearchField(query: $searchModel.query) {
@@ -65,7 +75,7 @@ struct HomeScreen: View {
                 }
             }
             .onChange(of: navigationRequest?.id) { _, _ in
-                guard let destination = navigationRequest?.destination else { return }
+                guard !embedded, let destination = navigationRequest?.destination else { return }
                 path.append(destination)
             }
             .onChange(of: searchActivation) { _, _ in
@@ -80,7 +90,6 @@ struct HomeScreen: View {
                     await focusSearch()
                 }
             }
-        }
     }
 
     /// Gives focus back to native `.searchable` without coupling presentation to query/results.

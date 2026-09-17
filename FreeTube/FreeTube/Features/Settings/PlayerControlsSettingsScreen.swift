@@ -7,7 +7,7 @@ struct PlayerControlsSettingsScreen: View {
     var body: some View {
         List {
             Section {
-                ForEach(model.playerTopControls) { control in
+                ForEach(model.playerTopControls.filter { $0 != .fullscreen }) { control in
                     HStack(spacing: 12) {
                         Image(systemName: control.systemImage)
                             .frame(width: 24)
@@ -21,7 +21,11 @@ struct PlayerControlsSettingsScreen: View {
                         )
                     }
                 }
-                .onMove(perform: model.movePlayerTopControls)
+                .onMove { source, destination in
+                    var controls = model.playerTopControls.filter { $0 != .fullscreen }
+                    controls.move(fromOffsets: source, toOffset: destination)
+                    model.playerTopControls = controls
+                }
             } footer: {
                 Text("Drag controls to change their order. Hidden controls remain available here and can be restored at any time.")
             }

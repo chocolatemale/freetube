@@ -133,11 +133,16 @@ struct FullScreenPlayer: View {
                     )
                     PlayerArtworkBackdrop(artwork: player.currentArtwork, state: player.loadState, isAudioOnly: player.isAudioOnlySession)
                     CaptionOverlay(text: player.currentCaptionText, controlsVisible: playerControlsVisible)
-                    DownloadProgressOverlay(state: player.loadState)
+                    DownloadProgressOverlay(
+                        state: player.loadState,
+                        showsStartupIndicator: !playerControlsVisible
+                    )
                     CustomPlayerControls(
                         isVisible: playerControlsVisible,
                         isSeekPreviewActive: gestureSeekPreview != nil || scrubberSeekPreview != nil,
                         isPlaying: player.isPlaying,
+                        isWaitingForPlayback: PlayerTransportIcon.isWaitingForPlayback(player.loadState),
+                        pendingAutoplay: player.pendingAutoplay,
                         hasEnded: player.hasEnded,
                         elapsed: scrubberSeekPreview ?? gestureSeekPreview ?? player.elapsed,
                         duration: player.duration,
@@ -157,6 +162,7 @@ struct FullScreenPlayer: View {
                             }
                             .buttonStyle(.plain)
                         ),
+                        fullscreenControl: AnyView(fullscreenButton),
                         bottomTimelinePadding: timelineBottomPadding(
                             in: CGSize(width: surfaceWidth, height: proxy.size.height)
                         ),
@@ -231,7 +237,10 @@ struct FullScreenPlayer: View {
                 }
                 .frame(width: surfaceWidth, height: surfaceHeight)
                 .animation(.easeOut(duration: 0.2), value: player.loadState)
-                .onAppear { showPlayerControls() }
+                .onAppear {
+                    showPlayerControls()
+                    player.resumePendingAutoplay()
+                }
                 .onDisappear { controlsHideTask?.cancel() }
                 .onChange(of: player.currentVideo?.id) { _, _ in
                     gestureSeekPreview = nil
@@ -244,6 +253,9 @@ struct FullScreenPlayer: View {
                     showPlayerControls()
                 }
                 .onChange(of: player.loadState, initial: true) { _, state in
+                    if state == .readyToPlay || state == .buffering {
+                        player.resumePendingAutoplay()
+                    }
                     if state == .readyToPlay, player.isPlaying {
                         // The initial onAppear/current-video callbacks run while resolution is
                         // still pending, when showPlayerControls cannot schedule its hide timer.
@@ -468,9 +480,10 @@ struct FullScreenPlayer: View {
             Image(systemName: verticalSizeClass == .compact || portraitFullscreenActive
                 ? "arrow.down.right.and.arrow.up.left"
                 : "arrow.up.left.and.arrow.down.right")
-                .font(.body.weight(.bold))
+                .font(.system(size: 21, weight: .bold))
                 .foregroundStyle(.white)
-                .frame(width: 36, height: 36)
+                .frame(width: 44, height: 44)
+                .background(.black.opacity(0.35), in: RoundedRectangle(cornerRadius: 12))
                 .contentShape(Circle())
                 .shadow(color: .black.opacity(0.75), radius: 2, y: 1)
         }
@@ -1030,7 +1043,7 @@ struct FullScreenPlayer: View {
 
     private var visiblePlayerTopControls: [PlayerTopControl] {
         let hidden = PlayerTopControl.decodeHidden(hiddenPlayerTopControlsRaw)
-        return PlayerTopControl.decodeOrder(playerTopControlOrderRaw).filter { !hidden.contains($0) }
+        return PlayerTopControl.decodeOrder(playerTopControlOrderRaw).filter { $0 != .fullscreen && !hidden.contains($0) }
     }
 
     @ViewBuilder
@@ -1221,7 +1234,7 @@ struct FullScreenPlayer: View {
     private var playlistListHeight: CGFloat {
         let controls = (playlistWindowLowerBound > 0 ? 1 : 0)
             + (playlistWindowUpperBound < player.queue.items.count || player.canLoadMorePlaylistItems ? 1 : 0)
-        return CGFloat(max(1, displayedPlaylistIndices.count + controls)) * Self.queueRowFootprint + 32
+        return CGFloat(max(1, displayedPlaylistVideos.count + controls)) * Self.queueRowFootprint + 32
     }
 
     private var playlistWindowLowerBound: Int {
@@ -1232,18 +1245,16 @@ struct FullScreenPlayer: View {
         min(player.queue.items.count, player.queue.currentIndex + playlistItemsAfter + 1)
     }
 
-    private var displayedPlaylistIndices: Range<Int> {
-        playlistWindowLowerBound..<playlistWindowUpperBound
-    }
-
-    private var displayedQueueIndices: [Int] {
-        player.queue.items.indices.filter { player.queue.items[$0].id != player.currentVideo?.id }
+    // SwiftUI can finish rendering old List rows after a new selection replaces the queue.
+    // Capture Video values, never indices that are later applied to the live mutable array.
+    private var displayedPlaylistVideos: [Video] {
+        Array(player.queue.items.dropFirst(playlistWindowLowerBound)
+            .prefix(max(0, playlistWindowUpperBound - playlistWindowLowerBound)))
     }
 
     private var allUpNextVideos: [Video] {
-        player.activePlaylist == nil
-            ? displayedQueueIndices.map { player.queue.items[$0] }
-            : player.playlistRecommendations
+        if player.activePlaylist != nil { return player.playlistRecommendations }
+        return player.queue.items.filter { $0.id != player.currentVideo?.id }
     }
 
     private var displayedUpNextVideos: [Video] {
@@ -1278,8 +1289,8 @@ struct FullScreenPlayer: View {
                             .buttonStyle(.plain)
                             .listRowBackground(Color.clear)
                         }
-                        ForEach(displayedPlaylistIndices, id: \.self) { index in
-                            queueRow(player.queue.items[index], preservesPlaylistContext: true)
+                        ForEach(displayedPlaylistVideos) { video in
+                            queueRow(video, preservesPlaylistContext: true)
                                 .listRowBackground(Color.clear)
                                 .frame(height: Self.queueRowHeight)
                                 .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))

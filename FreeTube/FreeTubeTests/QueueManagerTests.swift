@@ -24,6 +24,16 @@ final class QueueManagerTests: XCTestCase {
         XCTAssertEqual(queue.advance()?.id, "b")
     }
 
+    func testReplaceShrinksWithoutLeavingStaleIndices() {
+        let queue = QueueManager()
+        queue.replace(with: [video("a"), video("b"), video("c"), video("d"), video("e")])
+        let snapshot = queue.items
+        queue.replace(with: [video("z")])
+        XCTAssertEqual(queue.items.map(\.id), ["z"])
+        XCTAssertEqual(snapshot.count, 5)
+        XCTAssertEqual(queue.upcomingItems(count: 3).count, 0)
+    }
+
     func testRepeatAllWrapsAtQueueEnd() {
         let queue = QueueManager()
         queue.replace(with: [video("a"), video("b")], startAt: 1)

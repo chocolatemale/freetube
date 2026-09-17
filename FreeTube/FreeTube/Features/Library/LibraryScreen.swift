@@ -11,8 +11,9 @@ import Kingfisher
 ///   - Liked videos (special playlist `VLLL` — opens `PlaylistScreen`)
 ///   - Watch later (special playlist `VLWL` — opens `PlaylistScreen`)
 ///
-/// When signed out we show a single sign-in CTA and hide the menu. Tapping any item while
-/// signed out would route to an error toast — clearer to just gate the whole menu.
+/// When signed out we show a single sign-in CTA, hide the YouTube menu, and keep the on-device
+/// rows visible. When signed in those local rows sit behind a toggle (`showLocalLibrarySection`,
+/// default off). Tapping a YouTube menu item while signed out would toast — gate the whole menu.
 @available(iOS 17.0, *)
 struct LibraryScreen: View {
     let navigationRequest: AppNavigationRequest?
@@ -23,6 +24,7 @@ struct LibraryScreen: View {
     @State private var localSubscriptions = LocalSubscriptionStore.shared
     @State private var localPlaylistCount = 0
     @State private var path = NavigationPath()
+    @AppStorage("showLocalLibrarySection") private var showLocalLibrarySection = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -98,56 +100,70 @@ struct LibraryScreen: View {
 
     @ViewBuilder
     private var localHistorySection: some View {
-        Section("On this device") {
-            NavigationLink {
-                LocalHistoryScreen()
-            } label: {
-                HStack(spacing: 14) {
-                    Image(systemName: "clock.arrow.circlepath")
-                        .font(.title3)
-                        .foregroundStyle(.tint)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Local history")
-                        Text(countSubtitle(localHistoryCount, noun: "video"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+        let isSignedIn = accountModel.info != nil
+        let showsRows = LocalLibraryVisibility.showsDeviceRows(
+            isSignedIn: isSignedIn,
+            preferenceEnabled: showLocalLibrarySection
+        )
+        Section {
+            if isSignedIn {
+                Toggle("On this device", isOn: $showLocalLibrarySection)
+            }
+            if showsRows {
+                NavigationLink {
+                    LocalHistoryScreen()
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.title3)
+                            .foregroundStyle(.tint)
+                            .frame(width: 28)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Local history")
+                            Text(countSubtitle(localHistoryCount, noun: "video"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
+                NavigationLink {
+                    LocalSubscriptionsScreen()
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "person.2.fill")
+                            .font(.title3)
+                            .foregroundStyle(.tint)
+                            .frame(width: 28)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Local subscriptions")
+                            Text(countSubtitle(localSubscriptions.subscriptions.count, noun: "channel"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
+                NavigationLink {
+                    LocalPlaylistsScreen()
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "music.note.list")
+                            .font(.title3)
+                            .foregroundStyle(.tint)
+                            .frame(width: 28)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Local playlists")
+                            Text(countSubtitle(localPlaylistCount, noun: "playlist"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
-
-            NavigationLink {
-                LocalSubscriptionsScreen()
-            } label: {
-                HStack(spacing: 14) {
-                    Image(systemName: "person.2.fill")
-                        .font(.title3)
-                        .foregroundStyle(.tint)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Local subscriptions")
-                        Text(countSubtitle(localSubscriptions.subscriptions.count, noun: "channel"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-
-            NavigationLink {
-                LocalPlaylistsScreen()
-            } label: {
-                HStack(spacing: 14) {
-                    Image(systemName: "music.note.list")
-                        .font(.title3)
-                        .foregroundStyle(.tint)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Local playlists")
-                        Text(countSubtitle(localPlaylistCount, noun: "playlist"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+        } header: {
+            if !isSignedIn {
+                Text("On this device")
             }
         }
     }

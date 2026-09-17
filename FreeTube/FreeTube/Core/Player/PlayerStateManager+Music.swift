@@ -49,6 +49,26 @@ extension PlayerStateManager {
         }
     }
 
+    /// Music playlists skip YouTube video recommendations, so an exhausted song queue has to
+    /// grow from radio rather than `/next`. Used when the user hits the last queued track.
+    func fillMusicRadioThenAdvance(from seed: Video, music: any MusicServicing = MusicService.shared) async {
+        let radio: [MusicItem]
+        do {
+            radio = try await music.radio(videoID: seed.id, playlistID: nil)
+        } catch {
+            musicLog.notice("playNext: radio refill failed for \(seed.id, privacy: .public): \(String(describing: error), privacy: .public)")
+            return
+        }
+        guard isAudioOnlySession, currentVideo?.id == seed.id else { return }
+        let existing = Set(queue.items.map(\.id))
+        queue.append(contentsOf: radio.filter { !existing.contains($0.id) }.map(\.asVideo))
+        guard let next = queue.advance() else {
+            musicLog.notice("playNext: radio refill produced no new items for \(seed.id, privacy: .public)")
+            return
+        }
+        load(next, skipRecommendations: true, expandPlayer: false, audioOnly: true)
+    }
+
     /// Saves an audio-only copy for offline listening through the regular download pipeline, so
     /// it shows up in Downloads and is picked up by the resolver's local-file check next time.
     nonisolated static func downloadForOffline(_ track: MusicItem) {

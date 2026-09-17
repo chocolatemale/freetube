@@ -25,8 +25,8 @@
 #      unlikely to pass — keep it internal.
 #
 # Automatic signing with the API key creates the Apple Distribution certificate and the App
-# Store provisioning profile on demand (-allowProvisioningUpdates). The build number is the
-# UTC timestamp so every upload is unique; MARKETING_VERSION comes from the project.
+# Store provisioning profile on demand (-allowProvisioningUpdates). MARKETING_VERSION stays
+# 1.0; the build number is the UTC timestamp so every upload is unique.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."

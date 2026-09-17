@@ -8,6 +8,8 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct HomeFeedScreen: View {
     let navigationRequest: AppNavigationRequest?
+    var searchActivation: Int = 0
+    @State private var showingSearch = false
     @State private var path = NavigationPath()
     @State private var auth = AuthState.shared
     @State private var youtube = YouTubeHomeViewModel()
@@ -29,6 +31,16 @@ struct HomeFeedScreen: View {
                 }
             }
             .navigationTitle("Home")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { showingSearch = true } label: { Image(systemName: "magnifyingglass") }
+                        .accessibilityLabel("Search YouTube")
+                }
+            }
+            .navigationDestination(isPresented: $showingSearch) {
+                HomeScreen(searchActivation: searchActivation, navigationRequest: navigationRequest, embedded: true)
+            }
+            .onChange(of: searchActivation) { _, _ in showingSearch = true }
             .navigationDestination(for: AppNavigationRequest.Destination.self) { destination in
                 switch destination {
                 case .channel(let id): ChannelScreen(channelID: id)
@@ -56,8 +68,10 @@ struct YouTubeHomeFeedView: View {
     @Environment(PlayerStateManager.self) private var player
 
     var body: some View {
-        ScrollView {
+        ScrollViewReader { proxy in
+            ScrollView {
             LazyVStack(alignment: .leading, spacing: 0) {
+                Color.clear.frame(height: 0).id("home-top")
                 if !model.chips.isEmpty {
                     chipBar
                 }
@@ -91,8 +105,12 @@ struct YouTubeHomeFeedView: View {
                 Color.clear.frame(height: 24)
             }
         }
-        .refreshable { await model.refresh() }
-        .task { await model.load() }
+            .refreshable {
+                await model.refresh()
+                proxy.scrollTo("home-top", anchor: .top)
+            }
+            .task { await model.load() }
+        }
     }
 
     private var chipBar: some View {
@@ -104,6 +122,8 @@ struct YouTubeHomeFeedView: View {
                         Task { await model.select(chip) }
                     } label: {
                         Text(chip.title)
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
                             .font(.subheadline.weight(.semibold))
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
@@ -125,8 +145,6 @@ struct HomeShelfView: View {
     let section: HomeFeedSection
     @Environment(PlayerStateManager.self) private var player
 
-    private var isShorts: Bool { section.videos.allSatisfy(\.isShort) }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             if let title = section.title {
@@ -138,12 +156,8 @@ struct HomeShelfView: View {
                 LazyHStack(alignment: .top, spacing: 12) {
                     ForEach(section.videos) { video in
                         Button { player.load(video) } label: {
-                            if isShorts {
-                                ShortTile(video: video)
-                            } else {
-                                VideoCard(video: video, showsMoreMenu: false)
-                                    .frame(width: 280)
-                            }
+                            VideoCard(video: video, showsMoreMenu: false)
+                                .frame(width: 280)
                         }
                         .buttonStyle(.plain)
                     }
@@ -152,32 +166,6 @@ struct HomeShelfView: View {
             }
             .scrollClipDisabled()
         }
-    }
-}
-
-@available(iOS 17.0, *)
-private struct ShortTile: View {
-    let video: Video
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            KFImage(video.thumbnailURL)
-                .thumbnail(size: CGSize(width: 150, height: 266)) { Color.gray.opacity(0.18) }
-                .resizable()
-                .scaledToFill()
-                .frame(width: 150, height: 266)
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            Text(video.title)
-                .font(.footnote.weight(.medium))
-                .lineLimit(2)
-                .multilineTextAlignment(.leading)
-            if !video.viewCountString.isEmpty {
-                Text(video.viewCountString)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .frame(width: 150)
     }
 }
 
@@ -203,7 +191,7 @@ struct LocalSubscriptionFeedView: View {
                 }
             }
 
-            ForEach(model.videos) { video in
+            ForEach(model.videos.filter { !$0.isShort }) { video in
                 VideoRow(
                     video: video,
                     showsMoreMenu: true,
@@ -281,14 +269,17 @@ final class YouTubeHomeViewModel {
     }
 
     func refresh() async {
+        // Pull-to-refresh must re-browse `FEwhat_to_watch`. Replaying the selected chip's
+        // continuation token is what chip taps use to load a filter; firing it again returns
+        // the same (or next) page, so the feed looks unchanged.
         let params = chips.first { $0.id == selectedChipID }?.params
-        await fetch(chipParams: params)
+        await fetch(chipParams: params, keepChips: params != nil)
     }
 
     func select(_ chip: HomeFeedChip) async {
         guard chip.id != selectedChipID else { return }
         selectedChipID = chip.id
-        await fetch(chipParams: chip.params, keepChips: true)
+        await fetch(chipParams: chip.params, chipContinuation: chip.continuation, keepChips: true)
     }
 
     func loadMore() async {
@@ -299,7 +290,7 @@ final class YouTubeHomeViewModel {
             let page = try await service.more(continuation: token)
             let known = Set(items.map(\.id))
             items.append(contentsOf: page.items.filter { !known.contains($0.id) })
-            continuation = page.items.isEmpty ? nil : page.continuation
+            continuation = page.continuation == token ? nil : page.continuation
         } catch {
             continuation = nil
         }
@@ -313,11 +304,28 @@ final class YouTubeHomeViewModel {
         continuation = nil
     }
 
-    private func fetch(chipParams: String?, keepChips: Bool = false) async {
+    private func fetch(chipParams: String?, chipContinuation: String? = nil, keepChips: Bool = false) async {
         isLoading = true
         defer { isLoading = false }
         do {
-            let page = try await service.home(chipParams: chipParams)
+            var page: HomeFeedPage
+            if let chipContinuation {
+                page = try await service.more(continuation: chipContinuation)
+            } else {
+                page = try await service.home(chipParams: chipParams)
+            }
+            var hops = 0
+            var lastToken: String?
+            while page.items.isEmpty, let token = page.continuation, token != lastToken, hops < 6 {
+                lastToken = token
+                hops += 1
+                let more = try await service.more(continuation: token)
+                page = HomeFeedPage(
+                    chips: page.chips.isEmpty ? more.chips : page.chips,
+                    items: more.items,
+                    continuation: more.continuation
+                )
+            }
             items = page.items
             continuation = page.continuation
             if !page.chips.isEmpty {

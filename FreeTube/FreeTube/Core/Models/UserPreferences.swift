@@ -20,6 +20,9 @@ struct UserPreferences {
     @AppStorage("autoplayNext") var autoplayNext: Bool = true
     /// Shows locally stored resume progress along video thumbnails throughout the app.
     @AppStorage("showHistoryProgressBars") var showHistoryProgressBars: Bool = true
+    /// Signed-in Library hides the on-device history / subscriptions / playlists block by
+    /// default. Signed-out Library always shows those rows regardless of this flag.
+    @AppStorage("showLocalLibrarySection") var showLocalLibrarySection: Bool = false
     @AppStorage("historyRetentionPolicy") var historyRetentionPolicyRaw: String = HistoryRetentionPolicy.forever.rawValue
     /// Removes the local-subscription Feed destination from the tab bar when disabled. Cached
     /// entries remain on device so restoring the tab is immediate and does not force a refresh.

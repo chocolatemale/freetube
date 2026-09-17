@@ -117,11 +117,13 @@ enum HomeFeedParser {
                 return
             }
             if dict["feedFilterChipBarRenderer"] != nil {
+                var seen = Set<String>()
                 chips = node["feedFilterChipBarRenderer"]["contents"].array.compactMap(chip)
+                    .filter { seen.insert($0.id).inserted }
                 return
             }
             if dict["richItemRenderer"] != nil {
-                if let video = video(from: node["richItemRenderer"]["content"]["videoRenderer"]),
+                if let video = contentVideo(node["richItemRenderer"]["content"]),
                    !seenVideoIDs.contains(video.id) {
                     seenVideoIDs.insert(video.id)
                     items.append(.video(video))
@@ -147,6 +149,7 @@ enum HomeFeedParser {
         }
         visit(root["contents"])
         visit(root["onResponseReceivedActions"])
+        visit(root["onResponseReceivedEndpoints"])
         visit(root["header"])
         return HomeFeedPage(chips: chips, items: items, continuation: continuation)
     }
@@ -157,7 +160,9 @@ enum HomeFeedParser {
         return HomeFeedChip(
             title: title,
             params: renderer["navigationEndpoint"]["browseEndpoint"]["params"].string,
-            isSelected: renderer["isSelected"].bool ?? false
+            isSelected: renderer["isSelected"].bool ?? false,
+            continuation: renderer["navigationEndpoint"]["continuationCommand"]["token"].string
+                ?? renderer["onTap"]["innertubeCommand"]["continuationCommand"]["token"].string
         )
     }
 
@@ -165,13 +170,13 @@ enum HomeFeedParser {
         let shelf = content["richShelfRenderer"]
         guard shelf.exists else { return nil }
         let title = shelf["title"]["simpleText"].string ?? shelf["title"].runsText
+        guard !isShortsShelf(shelf, title: title) else { return nil }
         var videos: [Video] = []
         for entry in shelf["contents"].array {
             let item = entry["richItemRenderer"]["content"]
-            if let video = video(from: item["videoRenderer"]) {
+            if let video = contentVideo(item) {
                 videos.append(video)
-            } else if let short = short(from: item) {
-                videos.append(short)
+
             }
         }
         guard !videos.isEmpty else { return nil }
@@ -185,8 +190,10 @@ enum HomeFeedParser {
         let channelName = owner.runsText ?? ""
         let channelID = owner["runs"][0]["navigationEndpoint"]["browseEndpoint"]["browseId"].string ?? ""
         let avatar = r["channelThumbnailSupportedRenderers"]["channelThumbnailWithLinkRenderer"]["thumbnail"]["thumbnails"]
+        let overlayStyles = r["thumbnailOverlays"].array.compactMap { $0["thumbnailOverlayTimeStatusRenderer"]["style"].string }
+        if overlayStyles.contains("SHORTS") { return nil }
         let isLive = r["badges"].array.contains { $0["metadataBadgeRenderer"]["style"].string == "BADGE_STYLE_TYPE_LIVE_NOW" }
-            || r["thumbnailOverlays"].array.contains { $0["thumbnailOverlayTimeStatusRenderer"]["style"].string == "LIVE" }
+            || overlayStyles.contains("LIVE")
         return Video(
             id: id,
             title: title,
@@ -204,28 +211,48 @@ enum HomeFeedParser {
         )
     }
 
-    /// Shorts shelves use view models rather than renderers.
-    private static func short(from item: JSONNode) -> Video? {
-        let lockup = item["shortsLockupViewModel"]
-        guard lockup.exists else { return nil }
-        let id = lockup["onTap"]["innertubeCommand"]["reelWatchEndpoint"]["videoId"].string
-            ?? lockup["entityId"].string?.replacingOccurrences(of: "shorts-shelf-item-", with: "")
-        guard let id, !id.isEmpty else { return nil }
-        let title = lockup["overlayMetadata"]["primaryText"]["content"].string ?? ""
-        let views = lockup["overlayMetadata"]["secondaryText"]["content"].string
+    private static func isShortsShelf(_ shelf: JSONNode, title: String?) -> Bool {
+        if shelf["isShorts"].bool == true { return true }
+        let normalized = (title ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return normalized == "shorts" || normalized == "#shorts"
+    }
+
+    /// Current WEB feeds use lockup view models; older responses still use videoRenderer.
+    private static func contentVideo(_ content: JSONNode) -> Video? {
+        if content["shortsLockupViewModel"].exists || content["reelItemRenderer"].exists { return nil }
+        if let legacy = video(from: content["videoRenderer"]) { return legacy }
+        let r = content["lockupViewModel"]
+        if let type = r["contentType"].string, type.contains("SHORT") { return nil }
+        guard r["contentType"].string == "LOCKUP_CONTENT_TYPE_VIDEO",
+              let id = r["contentId"].string else { return nil }
+        let metadata = r["metadata"]["lockupMetadataViewModel"]
+        guard let title = metadata["title"]["content"].string else { return nil }
+        let rows = metadata["metadata"]["contentMetadataViewModel"]["metadataRows"].array
+        let parts = rows.flatMap { $0["metadataParts"].array }
+        let avatar = metadata["image"]["decoratedAvatarViewModel"]
+        let channelPart = parts.first {
+            $0["text"]["commandRuns"][0]["onTap"]["innertubeCommand"]["browseEndpoint"]["browseId"].string != nil
+        }
+        let channelID = avatar["rendererContext"]["commandContext"]["onTap"]["innertubeCommand"]["browseEndpoint"]["browseId"].string
+            ?? channelPart?["text"]["commandRuns"][0]["onTap"]["innertubeCommand"]["browseEndpoint"]["browseId"].string ?? ""
+        let stats = rows.last?["metadataParts"].array ?? []
+        let thumbnail = r["contentImage"]["thumbnailViewModel"]
+        let badges = thumbnail["overlays"].array.flatMap {
+            $0["thumbnailOverlayBadgeViewModel"]["thumbnailBadges"].array
+                + $0["thumbnailBottomOverlayViewModel"]["badges"].array
+        }.map { $0["thumbnailBadgeViewModel"] }
+        let duration = badges.compactMap { MusicResponseParser.parseDuration($0["text"].string) }.first
         return Video(
-            id: id,
-            title: title,
-            channelID: "",
-            channelName: "",
-            channelThumbnailURL: nil,
-            thumbnailURL: largest(lockup["thumbnail"]["sources"]) ?? Mappers.canonicalThumbnailURL(for: id),
-            duration: nil,
-            viewCount: Mappers.parseViewCount(views),
-            publishedAt: nil,
+            id: id, title: title, channelID: channelID,
+            channelName: channelPart?["text"]["content"].string ?? parts.first?["text"]["content"].string ?? "",
+            channelThumbnailURL: largest(avatar["avatar"]["avatarViewModel"]["image"]["sources"]),
+            thumbnailURL: largest(thumbnail["image"]["sources"]) ?? Mappers.canonicalThumbnailURL(for: id),
+            duration: duration,
+            viewCount: Mappers.parseViewCount(stats.first?["text"]["content"].string),
+            publishedAt: nil, publishedRelative: stats.count > 1 ? stats.last?["text"]["content"].string : nil,
             descriptionSnippet: nil,
-            isLive: false,
-            isShort: true
+            isLive: badges.contains { $0["style"].string == "THUMBNAIL_BADGE_STYLE_LIVE" },
+            isShort: false
         )
     }
 

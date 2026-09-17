@@ -7,7 +7,13 @@ struct HomeFeedChip: Identifiable, Hashable, Sendable {
     let params: String?
     let isSelected: Bool
 
-    var id: String { params ?? "all" }
+    var continuation: String? = nil
+
+    var id: String {
+        if let continuation { return "c:" + continuation }
+        if let params { return "p:" + params }
+        return (isSelected ? "all:" : "t:") + title
+    }
 }
 
 /// A titled shelf inside the Home feed (Shorts, Breaking news, "From your subscriptions" …).

@@ -44,7 +44,9 @@ struct PlayerSurface: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ controller: AVPlayerViewController, context: Context) {
-        controller.player = player
+        if controller.player !== player {
+            controller.player = player
+        }
         controller.showsPlaybackControls = showsControls
         controller.canStartPictureInPictureAutomaticallyFromInline = entersPiPAutomatically
         controller.allowsVideoFrameAnalysis = false

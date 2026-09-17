@@ -5,9 +5,9 @@ import UIKit
 
 /// Top-level tabbed shell. CLAUDE.md §8: mini-player sits above the tab bar and persists across tabs.
 ///
-/// Tab layout (5 visible):
-/// - Home (YouTube's recommendations when signed in; local subscription feed when signed out; optional)
-/// - Search (search field, suggestions, results, and local recent searches)
+/// Tab layout:
+/// - Home (YouTube's recommendations when signed in; local subscription feed when signed out).
+///   Search is a toolbar action on Home, not a tab.
 /// - Music (YouTube Music home / explore / library, audio-only playback; optional)
 /// - Library (subsumes the former Account + Subscriptions tabs; includes Favorites/Recents/Playlists/Login)
 /// - Downloads (saved videos, transfer queue, and yt-dlp link downloads)
@@ -19,13 +19,12 @@ import UIKit
 struct RootView: View {
     @Environment(PlayerStateManager.self) private var player
     @Environment(\.scenePhase) private var scenePhase
-    @State private var selectedTab: Tab = DebugLaunchOptions.initialTab ?? .feed
+    @State private var selectedTab: Tab = DebugLaunchOptions.initialTab == .search ? .feed : (DebugLaunchOptions.initialTab ?? .feed)
     @State private var searchActivation = 0
     @AppStorage("showSubscriptionFeedTab") private var showSubscriptionFeedTab = true
     @AppStorage("showMusicTab") private var showMusicTab = true
     @State private var showingSettings = false
     @State private var feedNavigationRequest: AppNavigationRequest?
-    @State private var searchNavigationRequest: AppNavigationRequest?
     @State private var musicNavigationRequest: AppNavigationRequest?
     @State private var libraryNavigationRequest: AppNavigationRequest?
     @State private var downloadsNavigationRequest: AppNavigationRequest?
@@ -120,6 +119,17 @@ struct RootView: View {
                 ))
             }
         }
+        #if DEBUG
+        .task(id: player.isAudioOnlySession && player.loadState == .readyToPlay) {
+            guard player.isAudioOnlySession, player.loadState == .readyToPlay,
+                  let id = UserDefaults.standard.string(forKey: "FTVideoAfterMusic") else { return }
+            try? await Task.sleep(for: .seconds(3))
+            guard !Task.isCancelled else { return }
+            player.load(Video(id: id, title: "Transition check", channelID: "", channelName: "",
+                channelThumbnailURL: nil, thumbnailURL: nil, duration: nil, viewCount: nil,
+                publishedAt: nil, descriptionSnippet: nil, isLive: false, isShort: false))
+        }
+        #endif
         // Refresh the cached thumbnail whenever the user picks a new video. The mini-player's
         // `PopupContentWrapper` reads this so the bar shows the actual preview.
         .onChange(of: player.currentVideo?.id, initial: true) {
@@ -152,6 +162,9 @@ struct RootView: View {
             guard let tab = note.object as? Tab else { return }
             if tab == .settings {
                 showingSettings = true
+            } else if tab == .search {
+                selectedTab = .feed
+                searchActivation &+= 1
             } else {
                 selectedTab = tab
             }
@@ -174,30 +187,18 @@ struct RootView: View {
             guard let playlistID = note.object as? String, !playlistID.isEmpty else { return }
             routeInSelectedTab(.localPlaylist(playlistID))
         }
-        .onAppear {
-            if !showSubscriptionFeedTab, selectedTab == .feed { selectedTab = .search }
-            if !showMusicTab, selectedTab == .music { selectedTab = .search }
-        }
-        .onChange(of: showSubscriptionFeedTab) { _, isVisible in
-            if !isVisible, selectedTab == .feed { selectedTab = .search }
-        }
         .onChange(of: showMusicTab) { _, isVisible in
-            if !isVisible, selectedTab == .music { selectedTab = .search }
+            if !isVisible, selectedTab == .music { selectedTab = .feed }
         }
+
     }
 
     @ViewBuilder
     private var tabShell: some View {
         if #available(iOS 26.0, *) {
             TabView(selection: tabSelection) {
-                if showSubscriptionFeedTab {
-                    SwiftUI.Tab("Home", systemImage: "house.fill", value: Tab.feed) {
-                        HomeFeedScreen(navigationRequest: feedNavigationRequest)
-                    }
-                }
-
-                SwiftUI.Tab("Search", systemImage: "magnifyingglass", value: Tab.search) {
-                    HomeScreen(searchActivation: searchActivation, navigationRequest: searchNavigationRequest)
+                SwiftUI.Tab("Home", systemImage: "house.fill", value: Tab.feed) {
+                    HomeFeedScreen(navigationRequest: feedNavigationRequest, searchActivation: searchActivation)
                 }
 
                 if showMusicTab {
@@ -221,18 +222,12 @@ struct RootView: View {
     }
 
     /// iOS 17–25 compatibility. iOS 26 uses the modern `Tab` declarations above for its
-    /// native Liquid Glass tab bar, while Search remains an ordinary peer tab on every OS.
+    /// native Liquid Glass tab bar.
     private var legacyTabShell: some View {
         TabView(selection: tabSelection) {
-            if showSubscriptionFeedTab {
-                HomeFeedScreen(navigationRequest: feedNavigationRequest)
-                    .tabItem { Label("Home", systemImage: "house.fill") }
-                    .tag(Tab.feed)
-            }
-
-            HomeScreen(searchActivation: searchActivation, navigationRequest: searchNavigationRequest)
-                .tabItem { Label("Search", systemImage: "magnifyingglass") }
-                .tag(Tab.search)
+            HomeFeedScreen(navigationRequest: feedNavigationRequest, searchActivation: searchActivation)
+                .tabItem { Label("Home", systemImage: "house.fill") }
+                .tag(Tab.feed)
 
             if showMusicTab {
                 MusicScreen(navigationRequest: musicNavigationRequest)
@@ -251,19 +246,18 @@ struct RootView: View {
         }
     }
 
-    /// Keep Search as an ordinary peer tab. SwiftUI writes the selection binding even when an
-    /// already-selected tab item is tapped, which lets us request search activation without the
-    /// detached iOS 26 `.search` tab role or a gesture recognizer on the native tab bar.
+    /// `Tab.search` is no longer a bar item; selecting it (Mac menu) opens Home's search.
     private var tabSelection: Binding<Tab> {
         Binding(
             get: { selectedTab },
             set: { newTab in
-                if newTab == .feed, !showSubscriptionFeedTab {
-                    selectedTab = .search
+                if newTab == .search {
+                    selectedTab = .feed
+                    searchActivation &+= 1
                     return
                 }
                 if newTab == .music, !showMusicTab {
-                    selectedTab = .search
+                    selectedTab = .feed
                     return
                 }
                 if newTab == .settings {
@@ -281,8 +275,7 @@ struct RootView: View {
     private func routeInSelectedTab(_ destination: AppNavigationRequest.Destination) {
         let request = AppNavigationRequest(destination: destination)
         switch selectedTab {
-        case .feed: feedNavigationRequest = request
-        case .search: searchNavigationRequest = request
+        case .feed, .search: feedNavigationRequest = request
         case .music: musicNavigationRequest = request
         case .library: libraryNavigationRequest = request
         case .downloads: downloadsNavigationRequest = request
@@ -372,10 +365,13 @@ struct PopupContentWrapper: View {
                         player.dismiss()
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.caption2.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .foregroundStyle(Color.secondary)
+                            .frame(width: 36, height: 44, alignment: .leading)
+                            .contentShape(Rectangle())
                     }
-                    .contentShape(.interaction, Rectangle().inset(by: -10))
+                    .padding(.leading, -6)
+                    .contentShape(.interaction, Rectangle().inset(by: -6))
                     .accessibilityLabel("Close player")
                 }
             }
@@ -388,11 +384,10 @@ struct PopupContentWrapper: View {
                     Button {
                         player.togglePlayPause()
                     } label: {
-                        Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
-                            .foregroundStyle(Color.primary)
+                        miniPlayerTransportLabel
                     }
                     .contentShape(.interaction, Rectangle().inset(by: -10))
-                    .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
+                    .accessibilityLabel(miniPlayerTransportAccessibilityLabel)
                 }
             }
             .onChange(of: player.loadState, initial: true) { old, new in
@@ -403,6 +398,40 @@ struct PopupContentWrapper: View {
                 // Self.log.info("onChange.video old=\(old ?? "nil", privacy: .public) new=\(new ?? "nil", privacy: .public)")
                 subtitleText = computedSubtitle
             }
+    }
+
+    private var miniPlayerTransportIcon: PlayerTransportIcon {
+        PlayerTransportIcon.resolve(
+            hasEnded: player.hasEnded,
+            isPlaying: player.isPlaying,
+            pendingAutoplay: player.pendingAutoplay,
+            isWaitingForPlayback: PlayerTransportIcon.isWaitingForPlayback(player.loadState)
+        )
+    }
+
+    @ViewBuilder
+    private var miniPlayerTransportLabel: some View {
+        switch miniPlayerTransportIcon {
+        case .loading:
+            ProgressView()
+                .progressViewStyle(.circular)
+                .controlSize(.regular)
+        case .play:
+            Image(systemName: "play.fill").foregroundStyle(Color.primary)
+        case .pause:
+            Image(systemName: "pause.fill").foregroundStyle(Color.primary)
+        case .replay:
+            Image(systemName: "arrow.counterclockwise").foregroundStyle(Color.primary)
+        }
+    }
+
+    private var miniPlayerTransportAccessibilityLabel: String {
+        switch miniPlayerTransportIcon {
+        case .loading: String(localized: "Loading")
+        case .replay: String(localized: "Replay")
+        case .pause: String(localized: "Pause")
+        case .play: String(localized: "Play")
+        }
     }
 
     /// Static helper for the few external callers that still want a snapshot.

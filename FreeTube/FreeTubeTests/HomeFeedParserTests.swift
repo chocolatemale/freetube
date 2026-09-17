@@ -21,8 +21,8 @@ final class HomeFeedParserTests: XCTestCase {
 
         XCTAssertEqual(page.continuation, "CONT_TOKEN_1")
 
-        // 2 videos, Shorts shelf, news shelf; the duplicated video is dropped.
-        XCTAssertEqual(page.items.count, 4)
+        // Ordinary videos and news remain; Shorts and duplicate videos are removed.
+        XCTAssertEqual(page.items.count, 3)
         guard case .video(let first) = page.items[0] else { return XCTFail("first item should be a video") }
         XCTAssertEqual(first.id, "1JkzrR-hznE")
         XCTAssertTrue(first.title.hasPrefix("How ASML Makes Chips"))
@@ -34,13 +34,7 @@ final class HomeFeedParserTests: XCTestCase {
         XCTAssertNotNil(first.thumbnailURL)
         XCTAssertNotNil(first.channelThumbnailURL)
 
-        guard case .shelf(let shorts) = page.items[2] else { return XCTFail("third item should be the Shorts shelf") }
-        XCTAssertEqual(shorts.title, "Shorts")
-        XCTAssertEqual(shorts.videos.first?.id, "abc123XYZ00")
-        XCTAssertEqual(shorts.videos.first?.isShort, true)
-        XCTAssertEqual(shorts.videos.first?.viewCount, 1_200_000)
-
-        guard case .shelf(let news) = page.items[3] else { return XCTFail("fourth item should be the news shelf") }
+        guard case .shelf(let news) = page.items[2] else { return XCTFail("third item should be the news shelf") }
         XCTAssertEqual(news.title, "Breaking news")
         XCTAssertEqual(news.videos.count, 2)
     }
@@ -58,4 +52,53 @@ final class HomeFeedParserTests: XCTestCase {
         XCTAssertTrue(page.items.isEmpty)
         XCTAssertNil(page.continuation)
     }
+    func testModernVideoAndChipsWithContinuationEndpoints() throws {
+        let root = JSONNode([
+            "contents": ["richGridRenderer": [
+                "header": ["feedFilterChipBarRenderer": ["contents": [
+                    ["chipCloudChipRenderer": ["text": ["simpleText": "All"], "isSelected": true]],
+                    ["chipCloudChipRenderer": ["text": ["simpleText": "Music"], "navigationEndpoint": ["continuationCommand": ["token": "MUSIC_PAGE"]]]],
+                    ["chipCloudChipRenderer": ["text": ["simpleText": "Gaming"], "navigationEndpoint": ["continuationCommand": ["token": "GAMING_PAGE"]]]]
+                ]]],
+                "contents": [["richItemRenderer": ["content": ["lockupViewModel": [
+                    "contentId": "modern12345", "contentType": "LOCKUP_CONTENT_TYPE_VIDEO",
+                    "metadata": ["lockupMetadataViewModel": ["title": ["content": "A normal video"]]],
+                    "contentImage": ["thumbnailViewModel": ["image": ["sources": [["url": "https://i.ytimg.com/vi/modern12345/hqdefault.jpg"]]]]]
+                ]]]]]
+            ]]
+        ])
+        let page = HomeFeedParser.page(from: root)
+        XCTAssertEqual(Set(page.chips.map(\.id)).count, 3)
+        XCTAssertEqual(page.items.count, 1)
+        guard let item = page.items.first, case .video(let video) = item else { return XCTFail("missing modern video") }
+        XCTAssertEqual(video.title, "A normal video")
+        XCTAssertEqual(video.id, "modern12345")
+        XCTAssertFalse(video.isShort)
+        XCTAssertNotNil(video.thumbnailURL)
+    }
+
+    func testShortsLockupAndTitleOnlyShelfAreDropped() {
+        let root = JSONNode([
+            "contents": ["richGridRenderer": ["contents": [
+                ["richItemRenderer": ["content": ["lockupViewModel": [
+                    "contentId": "shortLockup1",
+                    "contentType": "LOCKUP_CONTENT_TYPE_SHORTS",
+                    "metadata": ["lockupMetadataViewModel": ["title": ["content": "A short"]]]
+                ]]]],
+                ["richItemRenderer": ["content": ["shortsLockupViewModel": [
+                    "onTap": ["innertubeCommand": ["reelWatchEndpoint": ["videoId": "shortReel01"]]]
+                ]]]],
+                ["richSectionRenderer": ["content": ["richShelfRenderer": [
+                    "title": ["simpleText": "Shorts"],
+                    "contents": [["richItemRenderer": ["content": ["videoRenderer": [
+                        "videoId": "shelfShort01",
+                        "title": ["simpleText": "Still a short"]
+                    ]]]]]
+                ]]]]
+            ]]]
+        ])
+        let page = HomeFeedParser.page(from: root)
+        XCTAssertTrue(page.items.isEmpty)
+    }
+
 }

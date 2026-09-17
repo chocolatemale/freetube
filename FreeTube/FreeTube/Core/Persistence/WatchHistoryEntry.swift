@@ -43,13 +43,11 @@ final class WatchHistoryEntry {
 extension WatchHistoryEntry {
     /// The same eligibility rules used when playback restores a saved position.
     var resumableProgress: Double? {
-        guard lastPosition.isFinite,
-              duration.isFinite,
-              lastPosition >= 10,
-              duration > 0,
-              duration - lastPosition >= 30,
-              lastPosition < duration * 0.95 else { return nil }
-        return lastPosition / duration
+        guard let position = WatchProgressEligibility.resumePosition(
+            lastPosition: lastPosition,
+            storedDuration: duration
+        ) else { return nil }
+        return position / duration
     }
 }
 
@@ -66,12 +64,10 @@ struct WatchHistorySnapshot: Identifiable, Sendable, Codable {
     let duration: TimeInterval
 
     var resumableProgress: Double? {
-        guard lastPosition.isFinite,
-              duration.isFinite,
-              lastPosition >= 10,
-              duration > 0,
-              duration - lastPosition >= 30,
-              lastPosition < duration * 0.95 else { return nil }
-        return lastPosition / duration
+        guard let position = WatchProgressEligibility.resumePosition(
+            lastPosition: lastPosition,
+            storedDuration: duration
+        ) else { return nil }
+        return position / duration
     }
 }

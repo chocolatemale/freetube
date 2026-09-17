@@ -136,3 +136,55 @@ Xcode 27 ships no Simulator.app; the GUI is `Xcode.app/Contents/Applications/Dev
   through every internal `load(...)` (next/previous/queue tap) or a song silently becomes video.
 - Music downloads are ordinary downloads tagged `DownloadMetadata.audioOnlyFormatID`; they show
   in both Downloads and Music › Library.
+
+## Home / player regression pitfalls (2026-09-17)
+
+- WEB Home now mixes `lockupViewModel` ordinary videos with old `videoRenderer` nodes.
+  Supporting only the latter makes a real signed-in Home look like nothing but Shorts.
+  Chips may use `continuationCommand` instead of browse params; carry and request that token,
+  and never assign every no-params chip the same `all` SwiftUI ID. Filter Shorts on Home.
+  Empty filtered pages can still have a valid continuation; keep paging until it ends or repeats.
+- Never render playlist or Up Next rows by capturing indices and then subscripting
+  `player.queue.items` inside a lazy `ForEach` closure. Music radio → ordinary video shrinks
+  that array before SwiftUI finishes the old rows and traps with "Index out of range". Render
+  a snapshot of `Video` values.
+- Home is the permanent iPhone/iPad root and owns the Search toolbar action; Search is no longer
+  a bottom tab. Fullscreen is a fixed 44-point bottom-right player control, not a top-row option.
+- A tap that calls `play()` must keep `pendingAutoplay` until the user pauses. KVO `.paused`
+  while the item is still buffering, or `AVPlayerViewController` re-binding on popup expand,
+  used to flip `isPlaying` false and leave the video sitting on its thumbnail. Call
+  `resumePendingAutoplay()` from the player surface, not another tap on the play button.
+  Do **not** re-issue `play()` for a pause at natural end or during an in-flight seek:
+  that cancels `AVPlayerItemDidPlayToEndTime` auto-advance and makes timeline seeks finish
+  with `finished == false`, so neither next-track nor drag-to-resume play. Clear
+  `pendingAutoplay` in the end observer, then let `playNext()` / seek-completion start the
+  next request. Music queues skip video `/next`; if they run out, refill from radio.
+- After every user-facing fix, archive and upload TestFlight Internal (`scripts/testflight.sh`)
+  and attach the processed build to group `6a370cb9-8987-4e1f-920b-688f334e17f2`. Do not wait
+  to be asked. `MARKETING_VERSION` stays `1.0`; `CURRENT_PROJECT_VERSION` is the UTC
+  timestamp that distinguishes TestFlight builds.
+- Home pull-to-refresh must call `home(chipParams:)` again. Replaying a chip
+  `continuationCommand` is how chip taps load a filter; doing that on refresh returns the
+  same page, so the feed looks unchanged.
+- While `pendingAutoplay` is set and load state is still resolving/buffering/downloading, the
+  center and mini-player transport control must show a spinner, not Play. The unchanged
+  triangle reads as "tap again to start" even though playback was already requested. Keep
+  `DownloadProgressOverlay`'s startup spinner only when that chrome is hidden, so the two
+  never stack.
+- Music (`isAudioOnlySession`) never seeks a stored watch position. People play songs from
+  the start; a leftover video resume for the same ID must not jump mid-track.
+- Signed-in Library hides the "On this device" rows behind `showLocalLibrarySection`
+  (default off). Signed-out Library always shows them — that is the only local history the
+  user has.
+- The mini-player close X is a leading popup button. Keep the glyph and hit target larger
+  than a caption and biased toward the leading edge; a tiny `caption2` mark against the
+  thumbnail looks untappable.
+- YouTube itag 140 AAC DASH `m4a` often has an empty `stts` atom. AVPlayer then reports
+  about twice the song length and plays silence after the real audio. Do not feed that
+  progressive file to Music: take the HLS master's default audio media playlist, and if
+  a leftover 140 item still arrives, clamp the displayed duration and synthesize natural
+  end at the metadata length so auto-next fires at the real last note. Changing cache
+  key `native-audioOnly` → `native-audioOnly-v2` is what drops the old doubled URLs.
+- Icon Composer blanks a thin evenodd outline: the 2026-09-17 YouTube ring compiled to a
+  white 120×120 with two dark pixels. Keep one filled path, with `width`/`height` like the
+  original mark, and no `fill-rule="evenodd"`.

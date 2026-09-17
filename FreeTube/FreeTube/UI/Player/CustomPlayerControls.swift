@@ -5,6 +5,8 @@ struct CustomPlayerControls: View {
     let isVisible: Bool
     let isSeekPreviewActive: Bool
     let isPlaying: Bool
+    let isWaitingForPlayback: Bool
+    let pendingAutoplay: Bool
     let hasEnded: Bool
     let elapsed: TimeInterval
     let duration: TimeInterval
@@ -17,6 +19,7 @@ struct CustomPlayerControls: View {
     let channelName: String
     let showsCollapseButton: Bool
     let additionalTopControls: AnyView
+    let fullscreenControl: AnyView
     let bottomTimelinePadding: CGFloat
     let onTogglePlayPause: () -> Void
     let onSeek: (TimeInterval) -> Void
@@ -70,14 +73,9 @@ struct CustomPlayerControls: View {
                     }
                     .disabled(!hasPrevious)
                     Button(action: onTogglePlayPause) {
-                        Image(systemName: hasEnded ? "arrow.counterclockwise" : (isPlaying ? "pause.fill" : "play.fill"))
-                            .font(.system(size: 34, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 68, height: 68)
-                            .contentShape(Circle())
-                            .shadow(color: .black.opacity(0.75), radius: 3, y: 1)
+                        centerTransportLabel
                     }
-                    .accessibilityLabel(hasEnded ? "Replay" : (isPlaying ? "Pause" : "Play"))
+                    .accessibilityLabel(centerTransportAccessibilityLabel)
                     Button(action: onNext) {
                         Image(systemName: "forward.end.fill").playerCenterControl()
                     }
@@ -88,16 +86,21 @@ struct CustomPlayerControls: View {
 
                 Spacer()
 
-                SponsorBlockTimeline(
-                    elapsed: elapsed,
-                    duration: duration,
-                    isLive: isLive,
-                    segments: sponsorSegments,
-                    chapters: chapters,
-                    onSeek: onSeek,
-                    onPreviewChanged: onSeekPreviewChanged,
-                    onShowChapters: onShowChapters
-                )
+                HStack(alignment: .bottom, spacing: 8) {
+                    SponsorBlockTimeline(
+                        elapsed: elapsed,
+                        duration: duration,
+                        isLive: isLive,
+                        segments: sponsorSegments,
+                        chapters: chapters,
+                        onSeek: onSeek,
+                        onPreviewChanged: onSeekPreviewChanged,
+                        onShowChapters: onShowChapters
+                    )
+                    .frame(maxWidth: .infinity)
+                    fullscreenControl
+                        .opacity(isVisible ? 1 : 0)
+                }
                 .padding(.horizontal, 12)
                 .padding(.bottom, bottomTimelinePadding)
                 .opacity(isVisible || isSeekPreviewActive ? 1 : 0)
@@ -107,6 +110,53 @@ struct CustomPlayerControls: View {
         .accessibilityHidden(!isVisible && !isSeekPreviewActive)
         .animation(.easeInOut(duration: 0.24), value: isVisible)
         .animation(.easeInOut(duration: 0.12), value: isSeekPreviewActive)
+    }
+
+    private var transportIcon: PlayerTransportIcon {
+        PlayerTransportIcon.resolve(
+            hasEnded: hasEnded,
+            isPlaying: isPlaying,
+            pendingAutoplay: pendingAutoplay,
+            isWaitingForPlayback: isWaitingForPlayback
+        )
+    }
+
+    @ViewBuilder
+    private var centerTransportLabel: some View {
+        switch transportIcon {
+        case .loading:
+            ProgressView()
+                .progressViewStyle(.circular)
+                .tint(.white)
+                .controlSize(.large)
+                .frame(width: 68, height: 68)
+                .contentShape(Circle())
+                .shadow(color: .black.opacity(0.75), radius: 3, y: 1)
+        case .play, .pause, .replay:
+            Image(systemName: centerTransportSystemImage)
+                .font(.system(size: 34, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 68, height: 68)
+                .contentShape(Circle())
+                .shadow(color: .black.opacity(0.75), radius: 3, y: 1)
+        }
+    }
+
+    private var centerTransportSystemImage: String {
+        switch transportIcon {
+        case .replay: return "arrow.counterclockwise"
+        case .pause: return "pause.fill"
+        case .play, .loading: return "play.fill"
+        }
+    }
+
+    private var centerTransportAccessibilityLabel: String {
+        switch transportIcon {
+        case .loading: return String(localized: "Loading")
+        case .replay: return String(localized: "Replay")
+        case .pause: return String(localized: "Pause")
+        case .play: return String(localized: "Play")
+        }
     }
 
 }

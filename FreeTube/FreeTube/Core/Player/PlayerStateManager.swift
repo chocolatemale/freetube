@@ -48,6 +48,11 @@ final class PlayerStateManager {
     private(set) var currentArtwork: UIImage?
     private(set) var loadState: LoadState = .idle
     private(set) var isPlaying: Bool = false
+    /// User/selection still wants playback. `play()` sets this; a user `pause()` clears it.
+    /// AVPlayerViewController attaching, or a KVO `.paused` while the item is not ready, must not
+    /// lose the original tap — `resumePendingAutoplay()` re-issues `play()` in those cases.
+    private(set) var pendingAutoplay = false
+    private var autoplayResumeCount = 0
     /// True only when the current item reached its natural end and no automatic transition has
     /// replaced it. Drives replay chrome and lets a backward seek resume from the chosen point.
     private(set) var hasEnded: Bool = false
@@ -394,12 +399,16 @@ final class PlayerStateManager {
         // hearing when they tapped "next" mid-download.
         if isPlaying {
             log.info("load: pausing current playback before resolving new video")
-            pause()
+            player.pause()
+            isPlaying = false
+            persistCurrentPlaybackProgress(force: true)
         }
         if !player.items().isEmpty {
             log.debug("load: clearing AVQueuePlayer items (\(self.player.items().count, privacy: .public) entries)")
             player.removeAllItems()
         }
+        pendingAutoplay = autoplay
+        autoplayResumeCount = 0
         currentVideo = video
         lastProgressSaveAt = .distantPast
         lastSavedProgressVideoID = nil
@@ -511,6 +520,7 @@ final class PlayerStateManager {
             return
         }
         log.info("play()")
+        pendingAutoplay = true
         player.play()
         isPlaying = true
         publishNowPlayingWhenAlone()
@@ -518,9 +528,20 @@ final class PlayerStateManager {
 
     func pause() {
         log.info("pause()")
+        pendingAutoplay = false
         player.pause()
         isPlaying = false
         persistCurrentPlaybackProgress(force: true)
+    }
+
+    /// Re-issues `play()` when a tap already asked for playback but AVPlayer dropped the request
+    /// (popup expand, `AVPlayerViewController` re-bind, KVO `.paused` before the item is ready).
+    func resumePendingAutoplay() {
+        guard pendingAutoplay, !hasEnded, player.currentItem != nil, autoplayResumeCount < 4 else { return }
+        guard player.timeControlStatus == .paused else { return }
+        autoplayResumeCount += 1
+        log.info("resumePendingAutoplay() attempt=\(self.autoplayResumeCount, privacy: .public)")
+        play()
     }
 
     func togglePlayPause() {
@@ -537,6 +558,7 @@ final class PlayerStateManager {
         guard player.currentItem != nil else { return }
         log.info("replay()")
         hasEnded = false
+        pendingAutoplay = true
         seek(to: 0, resumeAfterEnded: false)
         player.play()
         isPlaying = true
@@ -603,9 +625,12 @@ final class PlayerStateManager {
         log.info("seek(to: \(seconds, privacy: .public)s)")
         guard currentVideo?.isLive != true || duration > 0 else { return }
         let boundedSeconds = max(0, duration > 0 ? min(seconds, duration) : seconds)
-        let shouldResume = resumeAfterEnded && hasEnded && boundedSeconds < max(0, duration - 0.25)
-        if shouldResume {
+        let canLeaveEndedState = duration.isFinite && duration > 0
+            ? boundedSeconds < duration - 0.25
+            : boundedSeconds >= 0
+        if resumeAfterEnded, hasEnded, canLeaveEndedState {
             hasEnded = false
+            pendingAutoplay = true
         }
         // Any segment whose end is still ahead of the new position becomes eligible again. This
         // makes rewinding before a previously skipped segment behave like a fresh encounter.
@@ -621,8 +646,7 @@ final class PlayerStateManager {
         seekRequestID += 1
         let requestID = seekRequestID
         let time = CMTime(seconds: boundedSeconds, preferredTimescale: 600)
-        player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
-            guard finished else { return }
+        player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
             Task { @MainActor in
                 // Let any periodic callback queued just before seek completion drain while the
                 // optimistic target is still pinned. Otherwise that stale tick briefly paints the
@@ -635,7 +659,10 @@ final class PlayerStateManager {
                     self.elapsed = settledTime
                     self.handleSponsorBlockSegment(at: settledTime)
                 }
-                if shouldResume {
+                if PendingAutoplayResume.shouldPlayAfterSeek(
+                    pendingAutoplay: self.pendingAutoplay,
+                    hasEnded: self.hasEnded
+                ) {
                     self.play()
                 }
             }
@@ -645,6 +672,18 @@ final class PlayerStateManager {
     func seekRelative(by delta: TimeInterval) {
         log.info("seekRelative(by: \(delta, privacy: .public)s)")
         seek(to: max(0, min(elapsed + delta, duration)))
+    }
+
+    private var isCurrentItemAtNaturalEnd: Bool {
+        guard let item = player.currentItem else { return false }
+        let playerDuration = item.duration.seconds
+        let resolvedDuration = isAudioOnlySession
+            ? AudioPlaybackDuration.resolved(player: playerDuration, metadata: currentVideo?.duration)
+            : playerDuration
+        return PendingAutoplayResume.isItemAtNaturalEnd(
+            current: item.currentTime().seconds,
+            duration: resolvedDuration
+        )
     }
 
     func playNext() {
@@ -663,6 +702,13 @@ final class PlayerStateManager {
         }
         if let next = queue.advance() {
             load(next, skipRecommendations: !queueAcceptsRecommendations, expandPlayer: false, audioOnly: isAudioOnlySession)
+            return
+        }
+        if isAudioOnlySession, let seed = currentVideo ?? queue.items.last {
+            log.info("playNext: music queue at end, refilling radio from seed=\(seed.id, privacy: .public)")
+            Task { [weak self] in
+                await self?.fillMusicRadioThenAdvance(from: seed)
+            }
             return
         }
         // Queue at end. If this queue accepts recommendations and the user hasn't asked for
@@ -987,6 +1033,7 @@ final class PlayerStateManager {
                 case .readyToPlay:
                     let preparationTime = self.itemLoadStartedAt.map { Date().timeIntervalSince($0) } ?? 0
                     self.log.info("AVPlayerItem status: readyToPlay after \(preparationTime, privacy: .public)s (duration=\(item.duration.seconds, privacy: .public)s)")
+                    self.applyPlaybackDuration(from: item.duration.seconds)
                     self.logAudioDiagnostics(for: item)
                     self.itemLoadStartedAt = nil
                     self.finishReadiness(.ready, for: item)
@@ -1197,6 +1244,40 @@ final class PlayerStateManager {
         }
 
         log.debug("resolveAndPlay: ended after cancellation or video change for \(video.id, privacy: .public)")
+    }
+
+    private func applyPlaybackDuration(from playerDuration: TimeInterval) {
+        guard playerDuration.isFinite else { return }
+        if isAudioOnlySession {
+            duration = AudioPlaybackDuration.resolved(
+                player: playerDuration,
+                metadata: currentVideo?.duration
+            )
+        } else {
+            duration = playerDuration
+        }
+    }
+
+    /// Shared by AVPlayer's natural-end notification and the audio-only duration clamp.
+    /// Pause first so a doubled itag 140 item cannot keep playing silence after we advance.
+    private func handleNaturalEnd() {
+        guard !hasEnded else { return }
+        player.pause()
+        isPlaying = false
+        hasEnded = true
+        // Natural end also pauses AVPlayer. Leave pendingAutoplay off so the KVO
+        // `.paused` handler cannot `play()` this finished item and cancel advancement.
+        pendingAutoplay = false
+        elapsed = duration
+        persistCurrentPlaybackProgress(force: true)
+        updateNowPlaying()
+
+        // Loop-one is an explicit playback instruction and therefore remains active even
+        // when general autoplay is disabled. Any successful transition resets `hasEnded`
+        // in `load`; if there is no next item, the replay state stays visible.
+        if queue.repeatMode == .one || preferences.autoplayNext {
+            playNext()
+        }
     }
 
     /// Caps HLS variant selection to the user's preferred quality.
@@ -1446,7 +1527,16 @@ final class PlayerStateManager {
                 }
                 if let item = self.player.currentItem {
                     let total = item.duration.seconds
-                    if total.isFinite { self.duration = total }
+                    self.applyPlaybackDuration(from: total)
+                    if self.isAudioOnlySession,
+                       AudioPlaybackDuration.shouldSynthesizeEnd(
+                        elapsed: self.elapsed,
+                        player: total,
+                        metadata: self.currentVideo?.duration
+                    ) {
+                        self.handleNaturalEnd()
+                        return
+                    }
                 }
                 self.accumulateHistoryPlaybackTime()
                 self.persistCurrentPlaybackProgress(force: false)
@@ -1466,18 +1556,7 @@ final class PlayerStateManager {
             Task { @MainActor in
                 guard let endedItem = notification.object as? AVPlayerItem,
                       endedItem === self.player.currentItem else { return }
-                self.isPlaying = false
-                self.hasEnded = true
-                self.elapsed = self.duration
-                self.persistCurrentPlaybackProgress(force: true)
-                self.updateNowPlaying()
-
-                // Loop-one is an explicit playback instruction and therefore remains active even
-                // when general autoplay is disabled. Any successful transition resets `hasEnded`
-                // in `load`; if there is no next item, the replay state stays visible.
-                if self.queue.repeatMode == .one || self.preferences.autoplayNext {
-                    self.playNext()
-                }
+                self.handleNaturalEnd()
             }
         }
 
@@ -1511,14 +1590,24 @@ final class PlayerStateManager {
                 // play installs and tears down items in quick succession, so a captured value can
                 // land after a later transition and leave `isPlaying` (and therefore the Now
                 // Playing rate) describing a candidate we already rejected.
+                self.log.debug("Transport status=\(self.player.timeControlStatus.rawValue, privacy: .public) rate=\(self.player.rate, privacy: .public)")
                 switch self.player.timeControlStatus {
                 case .playing:
+                    self.autoplayResumeCount = 0
                     if !self.isPlaying {
                         self.log.info("KVO timeControlStatus → playing (sync isPlaying=true)")
                         self.isPlaying = true
                     }
                 case .paused:
-                    if self.isPlaying {
+                    if PendingAutoplayResume.shouldResumeOnPause(
+                        pendingAutoplay: self.pendingAutoplay,
+                        hasEnded: self.hasEnded,
+                        isSeekInFlight: self.pendingSeekTarget != nil,
+                        isItemAtNaturalEnd: self.isCurrentItemAtNaturalEnd,
+                        loadState: self.loadState
+                    ) {
+                        self.resumePendingAutoplay()
+                    } else if self.isPlaying {
                         self.log.info("KVO timeControlStatus → paused (sync isPlaying=false)")
                         self.isPlaying = false
                     }
@@ -1557,14 +1646,14 @@ final class PlayerStateManager {
     ) {
         guard currentVideo?.id == video.id,
               let progress,
-              progress.position.isFinite,
-              progress.position >= 10 else { return }
-        let knownDuration = duration > 0 ? duration : progress.duration
-        guard knownDuration > 0,
-              knownDuration - progress.position >= 30,
-              progress.position < knownDuration * 0.95 else { return }
-        log.info("Resuming \(video.id, privacy: .public) at \(progress.position, privacy: .public)s")
-        seek(to: progress.position)
+              let target = WatchProgressEligibility.resumePosition(
+                lastPosition: progress.position,
+                storedDuration: progress.duration,
+                liveDuration: duration,
+                audioOnly: isAudioOnlySession
+              ) else { return }
+        log.info("Resuming \(video.id, privacy: .public) at \(target, privacy: .public)s")
+        seek(to: target)
     }
 
     /// Writes at most every ten seconds during playback, plus forced lifecycle saves. Duplicate

@@ -69,7 +69,6 @@ struct SettingsScreen: View {
                 }
 
                 Section {
-                    Toggle("Show Home tab", isOn: Bindable(model).showSubscriptionFeedTab)
                     Toggle("Show Music tab", isOn: Bindable(model).showMusicTab)
                 } header: {
                     Text("Tabs")

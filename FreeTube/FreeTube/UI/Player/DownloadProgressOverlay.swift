@@ -15,11 +15,16 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct DownloadProgressOverlay: View {
     let state: PlayerStateManager.LoadState
+    /// When the custom play button is visible it already owns the YouTube-style spinner, so
+    /// this overlay must not draw a second one on top of the thumbnail.
+    var showsStartupIndicator: Bool = true
 
     var body: some View {
         switch state {
         case .resolving, .buffering:
-            startupIndicator
+            if showsStartupIndicator {
+                startupIndicator
+            }
         case .downloading(let progress, let phase):
             overlay(label: label(for: progress, phase: phase), progress: progress)
         case .failed(let message):
@@ -37,6 +42,7 @@ struct DownloadProgressOverlay: View {
         ProgressView()
             .progressViewStyle(.circular)
             .tint(.white)
+            .controlSize(.large)
             .shadow(color: .black.opacity(0.5), radius: 4)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .allowsHitTesting(false)

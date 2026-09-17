@@ -16,6 +16,26 @@ final class WatchHistoryTests: XCTestCase {
         XCTAssertNil(snapshot(position: 195, duration: 200).resumableProgress)
     }
 
+    func testAudioOnlySessionDoesNotResumeMidTrack() {
+        let position = WatchProgressEligibility.resumePosition(
+            lastPosition: 60,
+            storedDuration: 240,
+            audioOnly: true
+        )
+
+        XCTAssertNil(position)
+    }
+
+    func testVideoSessionStillResumesMidWatch() {
+        let position = WatchProgressEligibility.resumePosition(
+            lastPosition: 60,
+            storedDuration: 240,
+            audioOnly: false
+        )
+
+        XCTAssertEqual(try XCTUnwrap(position), 60, accuracy: 0.001)
+    }
+
     private func snapshot(position: TimeInterval, duration: TimeInterval) -> WatchHistorySnapshot {
         WatchHistorySnapshot(
             videoID: "video",
