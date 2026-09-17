@@ -69,11 +69,31 @@ jobs:
           PY
           xcrun xcresulttool get test-results tests --path "$RUNNER_TEMP/Tests.xcresult" 2>/dev/null | python3 "$RUNNER_TEMP/failures.py" || true
           echo "== crash reports =="
-          for f in $(find ~/Library/Logs/DiagnosticReports -name 'FreeTube*.ips' -newer "$RUNNER_TEMP/xcodebuild-test.log" 2>/dev/null | head -3); do
-            echo "--- $f"; head -c 6000 "$f"; echo
-          done
-          for f in $(find "$RUNNER_TEMP/Tests.xcresult" \( -name '*.crash' -o -name '*.ips' \) 2>/dev/null | head -3); do
-            echo "--- $f"; head -c 6000 "$f"; echo
+          mkdir -p "$RUNNER_TEMP/attachments"
+          xcrun xcresulttool export attachments --path "$RUNNER_TEMP/Tests.xcresult" --output-path "$RUNNER_TEMP/attachments" 2>/dev/null || true
+          find "$RUNNER_TEMP/attachments" -type f | head -20
+          for f in $(find "$RUNNER_TEMP/attachments" ~/Library/Logs/DiagnosticReports "$RUNNER_TEMP/Tests.xcresult" \( -name '*.crash' -o -name '*.ips' \) 2>/dev/null | head -4); do
+            echo "--- $f"
+            python3 - "$f" <<'PY'
+          import json, sys
+          text = open(sys.argv[1], errors="replace").read()
+          # .ips = one JSON header line + one JSON body
+          try:
+              body = json.loads(text.split("\n", 1)[1])
+              print("exception:", body.get("exception"))
+              print("termination:", body.get("termination"))
+              print("asi:", body.get("asi"))
+              faulting = body.get("faultingThread", 0)
+              threads = body.get("threads", [])
+              if threads:
+                  frames = threads[faulting].get("frames", [])[:25]
+                  images = body.get("usedImages", [])
+                  for fr in frames:
+                      img = images[fr.get("imageIndex", 0)] if fr.get("imageIndex", 0) < len(images) else {}
+                      print("   ", img.get("name", "?"), fr.get("symbol", ""), "+", fr.get("imageOffset", ""), fr.get("sourceFile", ""), fr.get("sourceLine", ""))
+          except Exception as e:
+              print(text[:6000])
+          PY
           done
 
       - name: Upload test log
