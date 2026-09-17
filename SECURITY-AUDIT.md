@@ -140,10 +140,15 @@ through file sharing. `XDG_CACHE_HOME` now points at `Library/Caches/python`.
 
 ## Third-party hosts contacted
 
-`www.youtube.com`, `accounts.google.com` (sign-in only), `*.googlevideo.com` (media),
+`www.youtube.com`, `music.youtube.com` (Music tab; cookie header + `SAPISIDHASH` bound to that
+origin, dedicated ephemeral session with cookie storage off), `accounts.google.com` (sign-in
+only), `*.googlevideo.com` (media),
 `i.ytimg.com` and the avatar hosts YouTube returns (thumbnails, via Kingfisher, no cookies), `sponsor.ajay.app` (hashed prefix, optional),
 `github.com` (yt-dlp release + checksums, weekly). Plus whatever the user pastes into the Link
 tab — which now goes through yt-dlp **with TLS verification and without cookies**.
+
+Captions (`/youtubei/v1/player` as the IOS client and `/api/timedtext`) are fetched **without
+cookies**: subtitles are public and the request must not be attributable to the account.
 
 No analytics, crash reporting or telemetry SDK is linked.
 
