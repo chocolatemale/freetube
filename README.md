@@ -6,6 +6,30 @@ For personal use, sideload, or TestFlight only — **not** for public App Store 
 
 ---
 
+## About this fork (`chocolatemale/freetube`)
+
+Forked from [Gwal3n/freetube](https://github.com/Gwal3n/freetube) (itself the most active
+fork of `leshkodev/freetube`). What this fork adds:
+
+- **Security audit with fixes** — see [SECURITY-AUDIT.md](SECURITY-AUDIT.md). Headlines: TLS
+  verification is on for every yt-dlp request (bundled Mozilla CA bundle), rotated Google
+  session cookies no longer land on disk through the shared cookie jar, diagnostics moved out
+  of the file-sharing-exposed `Documents` folder, URLs redacted in logs, yt-dlp updates verified
+  against the release checksums, dead cookie-to-disk helper removed.
+- **Music tab** — YouTube Music's Home / Explore / Library (personalised when signed in),
+  search with facet chips, artist / album / playlist pages, radio "Up next", audio-only
+  streaming with album art, background playback via the existing player, and offline songs.
+- **Bug fixes** — iOS 27 stream resolution (EJS `output_preprocessed`), unit tests back in CI,
+  dead scaffolding removed (`BackgroundDownloadCoordinator`, unused `VideoDetailScreen`).
+- **Small things** — in-player quality picker, Simplified Chinese, Settings as a sheet so the
+  tab bar stays at five items.
+
+Unsigned IPAs are built by [GitHub Actions](../../actions/workflows/build-unsigned-ipa.yml) on
+every push to `main`; sign them with your own tooling. Contributor notes live in
+[AGENTS.md](AGENTS.md).
+
+---
+
 ## ⚠️ Disclaimer
 
 FreeTube is a hobby project provided **for personal and educational purposes only**.
@@ -98,7 +122,8 @@ If you do not agree with these terms, do not install or use this software.
 | Downloads (user-initiated + implicit during playback) | ✓ |
 | Three-tier playback fallback for PoT-locked content | ✓ |
 | "Link" tab — universal downloader for ~2,000 sites via yt-dlp | ✓ |
-| Localization: en / es / ru / fr / de | ✓ |
+| Music tab (YouTube Music home / explore / library, search, radio, offline songs) | ✓ |
+| Localization: en / es / ru / fr / de / zh-Hans | ✓ |
 | CarPlay | ✗ |
 | Chromecast | ✗ (out of scope) |
 
@@ -283,7 +308,7 @@ Settings:
 
 ## Localization
 
-`Localizable.xcstrings` is fully translated for **English / Spanish / Russian / French / German** (236 keys).
+`Localizable.xcstrings` is fully translated for **English / Spanish / Russian / French / German / Simplified Chinese** (258 keys).
 
 To add a string: use `String(localized:)` / `LocalizedStringKey` in code, build once, then translate the new `state: "new"` entries in the catalog.
 
