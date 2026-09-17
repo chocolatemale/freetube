@@ -41,6 +41,11 @@ and `gwal3n` are configured in the local clone.
 - Xcode's `PBXFileSystemSynchronizedRootGroup` means new files under `FreeTube/FreeTube` and
   `FreeTube/FreeTubeTests` are picked up automatically — including `Resources/*.pem` and
   `Fixtures/*.json`. Do not hand-edit `project.pbxproj` to add files.
+- **Never mark an `XCTestCase` subclass `@MainActor`.** XCTest creates the instances off the main
+  thread while enumerating tests; the isolated `init` aborts with SIGABRT and the report says
+  "crashed while preparing to run tests" — for every test in the class, with 0.000s duration.
+  This is what `QueueManagerTests` did and why Gwal3n disabled the CI test step. Mark
+  individual test methods `@MainActor` if they really need it.
 - `HTTPCookieStorage.cookieAcceptPolicy` only governs cookies arriving through URL loading
   (`setCookies(_:for:mainDocumentURL:)`). `setCookie(_:)` bypasses it; a test that used it to
   prove the lockdown was wrong, not the lockdown.
