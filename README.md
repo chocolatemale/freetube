@@ -21,7 +21,7 @@ fork of `leshkodev/freetube`). What this fork adds:
   streaming with album art, background playback via the existing player, and offline songs.
 - **Bug fixes** — iOS 27 stream resolution (EJS `output_preprocessed`), unit tests back in CI,
   dead scaffolding removed (`BackgroundDownloadCoordinator`, unused `VideoDetailScreen`).
-- **Small things** — in-player quality picker, Simplified Chinese, Settings as a sheet so the
+- **Small things** — in-player quality and caption pickers (remembered caption language), Simplified Chinese, Settings as a sheet so the
   tab bar stays at five items.
 
 Unsigned IPAs are built by [GitHub Actions](../../actions/workflows/build-unsigned-ipa.yml) on
@@ -308,7 +308,7 @@ Settings:
 
 ## Localization
 
-`Localizable.xcstrings` is fully translated for **English / Spanish / Russian / French / German / Simplified Chinese** (258 keys).
+`Localizable.xcstrings` is fully translated for **English / Spanish / Russian / French / German / Simplified Chinese** (261 keys).
 
 To add a string: use `String(localized:)` / `LocalizedStringKey` in code, build once, then translate the new `state: "new"` entries in the catalog.
 

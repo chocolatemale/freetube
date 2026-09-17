@@ -112,6 +112,13 @@ struct RootView: View {
         .animation(.snappy(duration: 0.24), value: player.queueNotice?.id)
         .task {
             await SessionManager.shared.bootstrap()
+            if let videoID = DebugLaunchOptions.playVideoID {
+                player.load(Video(
+                    id: videoID, title: "YouTube video", channelID: "", channelName: "",
+                    channelThumbnailURL: nil, thumbnailURL: nil, duration: nil, viewCount: nil,
+                    publishedAt: nil, descriptionSnippet: nil, isLive: false, isShort: false
+                ))
+            }
         }
         // Refresh the cached thumbnail whenever the user picks a new video. The mini-player's
         // `PopupContentWrapper` reads this so the bar shows the actual preview.

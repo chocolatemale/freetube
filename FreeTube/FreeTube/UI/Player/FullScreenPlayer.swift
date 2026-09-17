@@ -132,6 +132,7 @@ struct FullScreenPlayer: View {
                         }
                     )
                     PlayerArtworkBackdrop(artwork: player.currentArtwork, state: player.loadState, isAudioOnly: player.isAudioOnlySession)
+                    CaptionOverlay(text: player.currentCaptionText, controlsVisible: playerControlsVisible)
                     DownloadProgressOverlay(state: player.loadState)
                     CustomPlayerControls(
                         isVisible: playerControlsVisible,
@@ -1047,6 +1048,44 @@ struct FullScreenPlayer: View {
             autoplayPlayerButton
         case .quality:
             qualityPlayerMenu
+        case .captions:
+            captionsPlayerMenu
+        }
+    }
+
+    /// Subtitle picker. Hidden (rather than disabled) when the video offers no tracks, so the
+    /// control row stays uncluttered for the many videos without captions.
+    @ViewBuilder
+    private var captionsPlayerMenu: some View {
+        if player.hasCaptionTracks {
+            Menu {
+                Button {
+                    player.selectCaption(nil)
+                    showPlayerControls()
+                } label: {
+                    if player.selectedCaptionTrack == nil {
+                        Label("Off", systemImage: "checkmark")
+                    } else {
+                        Text("Off")
+                    }
+                }
+                ForEach(player.captionTracks) { track in
+                    Button {
+                        player.selectCaption(track)
+                        showPlayerControls()
+                    } label: {
+                        if player.selectedCaptionTrack?.id == track.id {
+                            Label(track.displayName, systemImage: "checkmark")
+                        } else {
+                            Text(track.displayName)
+                        }
+                    }
+                }
+            } label: {
+                Image(systemName: player.selectedCaptionTrack == nil ? "captions.bubble" : "captions.bubble.fill")
+                    .playerTopControl()
+            }
+            .accessibilityLabel("Captions")
         }
     }
 

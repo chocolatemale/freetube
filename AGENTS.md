@@ -83,6 +83,10 @@ and `gwal3n` are configured in the local clone.
   10 MiB `Range` chunks like yt-dlp does (`NativeHLSDownloadService.downloadProgressive`): the
   same 5 MB file went from >40 s (unfinished) to 3.6 s. Never feed a progressive URL to the HLS
   parser — it reads the whole file as text and fails.
+- **Captions need the `IOS` client.** `timedtext` URLs from the WEB player response (what
+  YouTubeKit's watch-page scrape returns) answer with an empty HTTP 200 unless a PO token is
+  attached; the `IOS` client's URLs serve full `fmt=json3` transcripts. `CaptionService` calls
+  `/youtubei/v1/player` as IOS directly, without cookies.
 - yt-dlp's EJS request must be sent with `"output_preprocessed": false` on iOS 27, otherwise
   JavaScriptCore → Swift → PythonKit hands back an empty string (`PythonJSBridge`).
 - PythonKit's single-argument `PythonFunction` receives the argument itself, not a tuple;

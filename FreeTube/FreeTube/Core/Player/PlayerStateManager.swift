@@ -62,6 +62,16 @@ final class PlayerStateManager {
     private(set) var sponsorBlockNotice: SponsorBlockNotice?
     private(set) var sponsorBlockSegments: [SponsorBlockSegment] = []
     private(set) var chapters: [VideoChapter] = []
+    // Captions live in `PlayerStateManager+Captions.swift`; internal setters are what lets that
+    // extension mutate them from another file. Views should treat them as read-only.
+    /// Subtitle tracks for the current video, fetched lazily once playback is ready.
+    var captionTracks: [CaptionTrack] = []
+    var selectedCaptionTrack: CaptionTrack?
+    /// The caption line for the current playhead, or `nil` when none is active.
+    var currentCaptionText: String?
+    var captionCues: [CaptionCue] = []
+    var captionTask: Task<Void, Never>?
+    var captionTracksVideoID: String?
     private(set) var storyboard: VideoStoryboard?
     private(set) var commentsCountText: String?
     private(set) var isLoadingMoreRecommendations = false
@@ -111,7 +121,8 @@ final class PlayerStateManager {
     private let sponsorBlockService: any SponsorBlockServicing
     private let videoService: any VideoServicing
     private let playlistService: any PlaylistServicing
-    private let preferences: UserPreferences
+    let captionService: any CaptionServicing
+    let preferences: UserPreferences
     private let log = AppLog(subsystem: "com.leshko.freetube", category: "PlayerStateManager")
 
     /// Sticky "this queue accepts recommendations" intent. Set to `true` whenever the user loads
@@ -183,6 +194,7 @@ final class PlayerStateManager {
         sponsorBlockService: any SponsorBlockServicing = SponsorBlockService(),
         videoService: any VideoServicing = VideoService(),
         playlistService: any PlaylistServicing = PlaylistService(),
+        captionService: any CaptionServicing = CaptionService(),
         preferences: UserPreferences = UserPreferences()
     ) {
         self.queue = queue
@@ -190,6 +202,7 @@ final class PlayerStateManager {
         self.sponsorBlockService = sponsorBlockService
         self.videoService = videoService
         self.playlistService = playlistService
+        self.captionService = captionService
         self.preferences = preferences
         self.playbackRate = preferences.playbackRate
         self.playbackQuality = preferences.preferredQuality
@@ -355,6 +368,7 @@ final class PlayerStateManager {
         recommendationTask?.cancel()
         contentPrefetchTask?.cancel()
         clearSponsorBlockState()
+        resetCaptions()
         chapters = []
         storyboard = nil
         commentsCountText = nil
@@ -1139,6 +1153,7 @@ final class PlayerStateManager {
                     storyboard = nativeStoryboard
                 }
                 applyStoredResumePosition(await resumeLookup.value, for: video)
+                loadCaptionTracksIfNeeded(for: video)
                 updateNowPlaying()
                 contentPrefetchTask?.cancel()
                 contentPrefetchTask = Task {
@@ -1436,6 +1451,7 @@ final class PlayerStateManager {
                 self.accumulateHistoryPlaybackTime()
                 self.persistCurrentPlaybackProgress(force: false)
                 self.updateNowPlaying()
+                self.updateCurrentCaption()
             }
         }
 

@@ -60,6 +60,9 @@ struct UserPreferences {
     /// `PlayerStateManager` reads this on init and observes the player's `defaultRate` to write
     /// changes back here — so a relaunch picks up where the last session left off.
     @AppStorage("playbackRate") var playbackRate: Double = 1.0
+    /// Language code of the last caption track the user turned on; empty = captions off. Applied
+    /// automatically to the next video that offers that language.
+    @AppStorage("captionLanguageCode") var captionLanguageCode: String = ""
     @AppStorage("sponsorBlockEnabled") var sponsorBlockEnabled: Bool = false
     @AppStorage("sponsorBlockSponsor") var sponsorBlockSponsor: Bool = true
     @AppStorage("sponsorBlockSelfPromotion") var sponsorBlockSelfPromotion: Bool = false

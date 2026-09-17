@@ -114,3 +114,28 @@ final class PythonJSBridgeTests: XCTestCase {
         XCTAssertEqual(PythonJSBridge.withoutPreprocessedPlayerCache(input), input)
     }
 }
+
+final class CaptionServiceTests: XCTestCase {
+    func testParsesJSON3EventsAndSkipsWindowDefinitions() {
+        let json = """
+        {"events":[
+          {"tStartMs":0,"dDurationMs":100,"id":1,"wpWinPosId":1,"wsWinStyleId":1},
+          {"tStartMs":1200,"dDurationMs":2160,"segs":[{"utf8":"All right, so here we are,"},{"utf8":" in front of\\nthe elephants"}]},
+          {"tStartMs":3360,"dDurationMs":200,"segs":[{"utf8":"\\n"}]},
+          {"tStartMs":4000,"segs":[{"utf8":"cool"}]}
+        ]}
+        """
+        let cues = CaptionService.parseJSON3(Data(json.utf8))
+        XCTAssertEqual(cues.count, 2)
+        XCTAssertEqual(cues[0].start, 1.2)
+        XCTAssertEqual(cues[0].end, 3.36, accuracy: 0.001)
+        XCTAssertEqual(cues[0].text, "All right, so here we are, in front of the elephants")
+        XCTAssertEqual(cues[1].start, 4.0)
+        XCTAssertEqual(cues[1].end, 4.5, accuracy: 0.001, "events without a duration get a 500 ms floor")
+    }
+
+    func testMalformedJSON3YieldsNoCues() {
+        XCTAssertTrue(CaptionService.parseJSON3(Data("not json".utf8)).isEmpty)
+        XCTAssertTrue(CaptionService.parseJSON3(Data("{}".utf8)).isEmpty)
+    }
+}

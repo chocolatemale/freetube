@@ -4,12 +4,11 @@ Open items only. Everything that used to be listed here and now exists in the ap
 removed (share menu consolidation, SponsorBlock Highlight + per-category behaviour, re-skip after
 seeking, hold-to-seek, seek thumbnails, fullscreen rotation, download button under the player,
 autoplay switch, playback back-stack, local history tab, channel opens over the player, playlist
-panel, quality picker).
+panel, quality picker, captions).
 
 ### Player
-- Captions. YouTube's HLS manifests carry no legible tracks, so this needs the
-  `captions.playerCaptionsTracklistRenderer` list from the player response, a `timedtext` fetch,
-  and an overlay renderer. Not started.
+- Captions: styling options (size, background) and translated tracks (`translationLanguages`)
+  are not exposed; only the video's own tracks are listed.
 - Progressive streams do not re-resolve when the quality picker changes; only the HLS cap is
   applied live. Re-resolving at the current position would make the picker feel instant.
 

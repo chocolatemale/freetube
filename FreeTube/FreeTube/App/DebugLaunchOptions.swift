@@ -36,6 +36,12 @@ enum DebugLaunchOptions {
     static var musicDownloadVideoID: String? {
         defaults.string(forKey: "FTMusicDownload")
     }
+
+    /// `-FTPlay <videoId>` starts an ordinary video in the player on launch. Combine with
+    /// `-captionLanguageCode en` to have that caption track switched on automatically.
+    static var playVideoID: String? {
+        defaults.string(forKey: "FTPlay")
+    }
     #else
     static var initialTab: RootView.Tab? { nil }
     static var musicSurface: MusicSurface? { nil }
@@ -43,5 +49,6 @@ enum DebugLaunchOptions {
     static var musicQuery: String? { nil }
     static var musicPlayVideoID: String? { nil }
     static var musicDownloadVideoID: String? { nil }
+    static var playVideoID: String? { nil }
     #endif
 }
