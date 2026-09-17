@@ -95,13 +95,18 @@ and `gwal3n` are configured in the local clone.
 ## Driving the UI without a screen
 
 Debug builds honour launch arguments (`DebugLaunchOptions`), e.g.
-`xcrun simctl launch <udid> com.leshko.freetube -FTInitialTab music -FTMusicSurface library`,
+`xcrun simctl launch <udid> uk.icoco.freetube -FTInitialTab music -FTMusicSurface library`,
 `-FTMusicBrowse MPREb_…`, `-FTMusicQuery "daft punk"`, `-FTMusicPlay <videoId>`,
 `-FTMusicDownload <videoId>`. Pair with `xcrun simctl io <udid> screenshot` and
 `xcrun simctl spawn <udid> log stream --level debug --predicate 'subsystem == "com.leshko.freetube"'`.
 Xcode 27 ships no Simulator.app; the GUI is `Xcode.app/Contents/Applications/DeviceHub.app`.
 
 ## Product decisions worth knowing
+
+- Bundle ID is `uk.icoco.freetube` (this fork's own App Store Connect record; `com.leshko.freetube`
+  belongs to upstream and cannot be uploaded from another team). The `os.Logger` subsystem,
+  Keychain service and notification names deliberately stay `com.leshko.freetube` — they are
+  namespaces, not identities, and changing them would orphan existing installs' Keychain items.
 
 - Home = YouTube's `FEwhat_to_watch` when signed in (`HomeFeedService`, raw InnerTube WEB browse
   with cookies + `www.youtube.com` SAPISIDHASH), local subscription feed when signed out. Anonymous

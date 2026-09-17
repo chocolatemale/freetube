@@ -192,7 +192,7 @@ See `CLAUDE.md` § 6 for the exact mapping from YouTubeKit response types to ser
 | Images | `Kingfisher` |
 | Persistence | `SwiftData` (`@Model` + `@ModelActor` writer for history/favorites/search) + file extended attributes for downloads metadata |
 | Secure storage | Keychain via `Security.framework` |
-| Logging | `os.Logger`, subsystem `com.leshko.freetube` (matches the app bundle id) |
+| Logging | `os.Logger`, subsystem `com.leshko.freetube` (kept from upstream; the bundle id is `uk.icoco.freetube`) |
 
 ---
 
