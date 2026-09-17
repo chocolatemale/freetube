@@ -306,8 +306,14 @@ enum MusicResponseParser {
             let type = titleNav?["watchEndpoint"]["watchEndpointMusicSupportedConfigs"]["watchEndpointMusicConfig"]["musicVideoType"].string
             // Search rows spell out "Song • Artist • Album"; keep the artist/album part. Inside a
             // top-result card the artist is implied and the column holds only "Song • 5:38".
-            if subtitle.hasPrefix("Song • ") || subtitle.hasPrefix("Video • ") {
-                subtitle = String(subtitle.drop(while: { $0 != "•" }).dropFirst(2))
+            // The type word is localised ("歌曲", "Canción"…), so detect it structurally: a
+            // short first run without a navigation endpoint, followed by a separator run.
+            let runs = secondary?["runs"].array ?? []
+            if runs.count >= 3,
+               runs[1]["text"].string?.trimmingCharacters(in: .whitespaces) == "•",
+               !runs[0]["navigationEndpoint"].exists,
+               (runs[0]["text"].string?.count ?? 99) <= 12 {
+                subtitle = runs.dropFirst(2).compactMap { $0["text"].string }.joined()
             }
             if let trailing = subtitle.split(separator: "•").last.map({ $0.trimmingCharacters(in: .whitespaces) }),
                let parsed = parseDuration(trailing) {

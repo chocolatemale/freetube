@@ -88,8 +88,10 @@ final class MusicService: MusicServicing, @unchecked Sendable {
             "client": [
                 "clientName": "WEB_REMIX",
                 "clientVersion": Self.clientVersion,
+                // Language follows the device; the region is left to YouTube (it infers it from
+                // the connection). Sending the device region would mislabel users whose device
+                // region is not a YouTube Music market or who route through another country.
                 "hl": Locale.current.language.languageCode?.identifier ?? "en",
-                "gl": Locale.current.region?.identifier ?? "US",
                 "platform": "DESKTOP"
             ],
             "user": ["lockedSafetyMode": false]
