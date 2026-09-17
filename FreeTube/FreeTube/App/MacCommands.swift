@@ -43,7 +43,7 @@ struct MacCommands: Commands {
         // from the former dedicated Search tab), so ⌘F also lands on Home — the host's
         // `.searchable` field is in the navigation bar and focus-able on macOS.
         CommandMenu("Navigate") {
-            Button("Feed") { postTab(.feed) }
+            Button("Home") { postTab(.feed) }
                 .keyboardShortcut("1", modifiers: .command)
             Button("Search") { postTab(.search) }
                 .keyboardShortcut("2", modifiers: .command)

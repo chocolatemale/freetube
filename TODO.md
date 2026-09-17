@@ -12,6 +12,11 @@ panel, quality picker, captions).
 - Progressive streams do not re-resolve when the quality picker changes; only the HLS cap is
   applied live. Re-resolving at the current position would make the picker feel instant.
 
+### Home
+- Chip selection re-fetches the whole feed (`params`), like the web client; the response's
+  `reloadContinuationItemsCommand` path is parsed structurally but has not been seen live yet.
+- Shelves render videos and Shorts; posts (`postRenderer`) and playlist lockups are skipped.
+
 ### Music
 - Library sub-pages (Liked songs = `VLLM`, `FEmusic_history`, uploads) are reachable through the
   shelves YouTube returns but have no dedicated screens yet.

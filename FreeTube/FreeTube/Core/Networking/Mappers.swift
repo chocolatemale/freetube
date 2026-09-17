@@ -44,7 +44,7 @@ enum Mappers {
         URL(string: "https://i.ytimg.com/vi/\(videoID)/hqdefault.jpg")
     }
 
-    private static func parseViewCount(_ text: String?) -> Int? {
+    static func parseViewCount(_ text: String?) -> Int? {
         guard let text else { return nil }
         let lower = text.lowercased()
         // Quick path: pure digits with optional separators ("1,234,567").

@@ -69,12 +69,12 @@ struct SettingsScreen: View {
                 }
 
                 Section {
-                    Toggle("Show subscription feed tab", isOn: Bindable(model).showSubscriptionFeedTab)
+                    Toggle("Show Home tab", isOn: Bindable(model).showSubscriptionFeedTab)
                     Toggle("Show Music tab", isOn: Bindable(model).showMusicTab)
                 } header: {
-                    Text("Feed")
+                    Text("Tabs")
                 } footer: {
-                    Text("Hiding the tab keeps your local subscriptions and cached feed on this device.")
+                    Text("Home shows YouTube's recommendations when you are signed in and your local subscriptions when you are not. Hiding a tab keeps its data on this device.")
                 }
 
                 Section {

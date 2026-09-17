@@ -6,7 +6,7 @@ import UIKit
 /// Top-level tabbed shell. CLAUDE.md §8: mini-player sits above the tab bar and persists across tabs.
 ///
 /// Tab layout (5 visible):
-/// - Feed (latest cached videos from local subscriptions; optional)
+/// - Home (YouTube's recommendations when signed in; local subscription feed when signed out; optional)
 /// - Search (search field, suggestions, results, and local recent searches)
 /// - Music (YouTube Music home / explore / library, audio-only playback; optional)
 /// - Library (subsumes the former Account + Subscriptions tabs; includes Favorites/Recents/Playlists/Login)
@@ -191,8 +191,8 @@ struct RootView: View {
         if #available(iOS 26.0, *) {
             TabView(selection: tabSelection) {
                 if showSubscriptionFeedTab {
-                    SwiftUI.Tab("Feed", systemImage: "rectangle.stack", value: Tab.feed) {
-                        SubscriptionFeedScreen(navigationRequest: feedNavigationRequest)
+                    SwiftUI.Tab("Home", systemImage: "house.fill", value: Tab.feed) {
+                        HomeFeedScreen(navigationRequest: feedNavigationRequest)
                     }
                 }
 
@@ -225,8 +225,8 @@ struct RootView: View {
     private var legacyTabShell: some View {
         TabView(selection: tabSelection) {
             if showSubscriptionFeedTab {
-                SubscriptionFeedScreen(navigationRequest: feedNavigationRequest)
-                    .tabItem { Label("Feed", systemImage: "rectangle.stack") }
+                HomeFeedScreen(navigationRequest: feedNavigationRequest)
+                    .tabItem { Label("Home", systemImage: "house.fill") }
                     .tag(Tab.feed)
             }
 

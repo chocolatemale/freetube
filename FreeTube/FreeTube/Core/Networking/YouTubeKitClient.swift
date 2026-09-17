@@ -65,6 +65,10 @@ nonisolated final class YouTubeKitClient: @unchecked Sendable {
     /// still inject the auth header).
     var cookies: String { model.cookies }
 
+    /// Anonymous session token YouTube expects on browse requests. Mirrored like `cookies` so raw
+    /// InnerTube callers do not need to import YouTubeKit.
+    var visitorData: String { model.visitorData }
+
     /// Drops the cached visitor token so the next request fetches a fresh one. Called by
     /// `SessionManager` after clearing cookies — the visitor token YouTube issued may have been
     /// tied to the now-expired auth.

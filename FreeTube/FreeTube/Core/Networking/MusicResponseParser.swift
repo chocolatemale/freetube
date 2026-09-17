@@ -22,6 +22,7 @@ struct JSONNode: @unchecked Sendable {
     var string: String? { value as? String }
     var int: Int? { (value as? NSNumber)?.intValue }
     var double: Double? { (value as? NSNumber)?.doubleValue }
+    var bool: Bool? { value as? Bool }
     var exists: Bool { value != nil }
     /// First key of a single-entry renderer wrapper such as `{"musicShelfRenderer": {...}}`.
     var rendererName: String? { (value as? [String: Any])?.keys.first }

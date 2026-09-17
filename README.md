@@ -19,6 +19,8 @@ fork of `leshkodev/freetube`). What this fork adds:
 - **Music tab** — YouTube Music's Home / Explore / Library (personalised when signed in),
   search with facet chips, artist / album / playlist pages, radio "Up next", audio-only
   streaming with album art, background playback via the existing player, and offline songs.
+- **Home tab** — restored: signed in, it is YouTube's own Home (topic chips, recommendations,
+  shelves, infinite scroll); signed out, the latest videos from locally subscribed channels.
 - **Bug fixes** — iOS 27 stream resolution (EJS `output_preprocessed`), unit tests back in CI,
   dead scaffolding removed (`BackgroundDownloadCoordinator`, unused `VideoDetailScreen`).
 - **Small things** — in-player quality and caption pickers (remembered caption language), Simplified Chinese, Settings as a sheet so the
@@ -308,7 +310,7 @@ Settings:
 
 ## Localization
 
-`Localizable.xcstrings` is fully translated for **English / Spanish / Russian / French / German / Simplified Chinese** (261 keys).
+`Localizable.xcstrings` is fully translated for **English / Spanish / Russian / French / German / Simplified Chinese** (271 keys).
 
 To add a string: use `String(localized:)` / `LocalizedStringKey` in code, build once, then translate the new `state: "new"` entries in the catalog.
 

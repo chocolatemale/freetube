@@ -3368,6 +3368,22 @@
         }
       }
     },
+    "Home shows YouTube's recommendations when you are signed in and your local subscriptions when you are not. Hiding a tab keeps its data on this device." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home shows YouTube's recommendations when you are signed in and your local subscriptions when you are not. Hiding a tab keeps its data on this device."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录时“首页”显示 YouTube 推荐，未登录时显示本机订阅。隐藏标签页不会删除其数据。"
+          }
+        }
+      }
+    },
     "If videos stop loading, tap this to wipe stored cookies and the visitor token. The next playback attempt will run anonymously." : {
       "localizations" : {
         "de" : {
@@ -3891,6 +3907,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "直播"
+          }
+        }
+      }
+    },
+    "Load more" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load more"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加载更多"
           }
         }
       }
@@ -4856,6 +4888,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "没有新内容"
+          }
+        }
+      }
+    },
+    "Nothing to show" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing to show"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无内容"
           }
         }
       }
@@ -5948,6 +5996,22 @@
         }
       }
     },
+    "Pull down to refresh your subscriptions." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pull down to refresh your subscriptions."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下拉刷新订阅。"
+          }
+        }
+      }
+    },
     "Pull to refresh or sign in to see your home feed." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6340,6 +6404,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最近观看"
+          }
+        }
+      }
+    },
+    "Refreshing subscriptions…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refreshing subscriptions…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在刷新订阅…"
           }
         }
       }
@@ -7382,6 +7462,22 @@
         }
       }
     },
+    "Show Home tab" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Home tab"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示“首页”标签页"
+          }
+        }
+      }
+    },
     "Show Music tab" : {
       "localizations" : {
         "en" : {
@@ -7615,6 +7711,22 @@
         }
       }
     },
+    "Sign in for your Home feed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in for your Home feed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录后查看你的首页推荐"
+          }
+        }
+      }
+    },
     "Sign in to YouTube" : {
       "localizations" : {
         "de" : {
@@ -7787,6 +7899,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登录失败"
+          }
+        }
+      }
+    },
+    "Signed in, this tab shows YouTube's recommendations for you. Signed out, it shows the latest videos from channels you subscribe to locally — subscribe from a channel page or import a subscriptions CSV in Settings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in, this tab shows YouTube's recommendations for you. Signed out, it shows the latest videos from channels you subscribe to locally — subscribe from a channel page or import a subscriptions CSV in Settings."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录后，这里显示 YouTube 为你推荐的内容；未登录时，显示你在本机订阅的频道的最新视频——可在频道页订阅，或在设置里导入订阅 CSV。"
           }
         }
       }
@@ -8221,6 +8349,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "订阅"
+          }
+        }
+      }
+    },
+    "Tabs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标签页"
           }
         }
       }
@@ -9318,6 +9462,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你还没有播放列表。点按上方的“新建播放列表”来创建一个。"
+          }
+        }
+      }
+    },
+    "YouTube returned no recommendations. Pull down to try again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube returned no recommendations. Pull down to try again."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube 没有返回推荐内容。下拉重试。"
           }
         }
       }

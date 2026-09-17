@@ -103,6 +103,12 @@ Xcode 27 ships no Simulator.app; the GUI is `Xcode.app/Contents/Applications/Dev
 
 ## Product decisions worth knowing
 
+- Home = YouTube's `FEwhat_to_watch` when signed in (`HomeFeedService`, raw InnerTube WEB browse
+  with cookies + `www.youtube.com` SAPISIDHASH), local subscription feed when signed out. Anonymous
+  `FEwhat_to_watch` returns only a `feedNudgeRenderer`, so there is no anonymous recommendation
+  mode — that is YouTube's behaviour, not a bug. The tab's preference key is still
+  `showSubscriptionFeedTab` for backward compatibility.
+
 - Settings is a sheet (gear in Library, ⌘,), not a tab: iPhone folds a sixth tab into "More".
 - Music playback reuses `PlayerStateManager` with `isAudioOnlySession`; the flag must be passed
   through every internal `load(...)` (next/previous/queue tap) or a song silently becomes video.
