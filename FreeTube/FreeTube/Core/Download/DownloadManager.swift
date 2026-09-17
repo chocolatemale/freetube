@@ -1118,6 +1118,29 @@ final class DownloadManager: TemporaryDownloading {
         snapshotID: String
     ) async throws {
         let fragmentCount = max(1, min(16, preferences.concurrentFragments))
+        if NativeHLSDownloadService.isProgressiveSource(source) {
+            // Audio-only resolution returns a single progressive file, not a playlist. Stream it
+            // to disk directly instead of handing it to the HLS parser (which would read the
+            // whole file as text, reject it, and fall back to yt-dlp).
+            log.info("native-download[\(video.id, privacy: .public)] progressive transfer")
+            try await NativeHLSDownloadService().downloadProgressive(source, to: destination) { [weak self] progress in
+                Task { @MainActor in
+                    guard let self else { return }
+                    self.handleProgress(
+                        status: "downloading",
+                        downloaded: Int(progress * 10_000),
+                        total: 10_000,
+                        speed: 0,
+                        eta: 0,
+                        phase: "audio",
+                        snapshotID: snapshotID,
+                        videoID: video.id,
+                        videoTitle: video.title
+                    )
+                }
+            }
+            return
+        }
         log.info("native-download[\(video.id, privacy: .public)] native HLS transfer concurrency=\(fragmentCount, privacy: .public)")
         try await NativeHLSDownloadService().download(
             manifestURL: source,

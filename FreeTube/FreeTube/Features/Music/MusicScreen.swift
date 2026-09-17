@@ -11,7 +11,7 @@ import SwiftUI
 struct MusicScreen: View {
     let navigationRequest: AppNavigationRequest?
 
-    @State private var surface: MusicSurface = .home
+    @State private var surface: MusicSurface = DebugLaunchOptions.musicSurface ?? .home
     @State private var home = MusicSurfaceViewModel(surface: .home)
     @State private var explore = MusicSurfaceViewModel(surface: .explore)
     @State private var library = MusicSurfaceViewModel(surface: .library)
@@ -76,6 +76,22 @@ struct MusicScreen: View {
                 path.append(route)
             }
             .task(id: surface) { await current.load() }
+            .task {
+                if let browseID = DebugLaunchOptions.musicBrowseID {
+                    path.append(MusicRoute.browse(browseID))
+                }
+                if let query = DebugLaunchOptions.musicQuery {
+                    search.query = query
+                    await search.submit()
+                }
+                if let videoID = DebugLaunchOptions.musicDownloadVideoID {
+                    PlayerStateManager.downloadForOffline(MusicItem(id: videoID, kind: .song, title: videoID, subtitle: "", thumbnailURL: nil, duration: nil, artistBrowseID: nil, playlistID: nil))
+                }
+                if let videoID = DebugLaunchOptions.musicPlayVideoID {
+                    let seed = MusicItem(id: videoID, kind: .song, title: videoID, subtitle: "", thumbnailURL: nil, duration: nil, artistBrowseID: nil, playlistID: nil)
+                    player.playMusic(seed, in: [seed])
+                }
+            }
             .refreshable { await current.load(force: true) }
             .onChange(of: auth.status) { _, _ in
                 home.invalidate()
@@ -102,14 +118,15 @@ struct MusicScreen: View {
     private var surfaceContent: some View {
         LazyVStack(alignment: .leading, spacing: 28) {
             chips
+            if surface == .library {
+                // Offline songs come first and never depend on an account.
+                downloadedShelf
+            }
             if surface == .library, !isSignedIn {
                 signInPrompt
             } else if current.isLoading, current.shelves.isEmpty {
                 LoadingView()
             } else {
-                if surface == .library {
-                    downloadedShelf
-                }
                 ForEach(current.shelves) { shelf in
                     MusicShelfView(shelf: shelf)
                 }
@@ -174,7 +191,8 @@ struct MusicScreen: View {
                 kind: .song,
                 title: meta.title,
                 subtitle: meta.channelName,
-                thumbnailURL: nil,
+                // YouTube's canonical still for the ID; Kingfisher caches it after first sight.
+                thumbnailURL: URL(string: "https://i.ytimg.com/vi/\(meta.videoID)/hqdefault.jpg"),
                 duration: entry.duration,
                 artistBrowseID: nil,
                 playlistID: nil

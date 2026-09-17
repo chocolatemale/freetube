@@ -23,7 +23,17 @@ struct PlayerArtworkBackdrop: View {
     var isAudioOnly: Bool = false
 
     var body: some View {
-        if coversPlayerSurface, let artwork {
+        if isAudioOnly, artwork == nil {
+            // Audio-only with no art yet: still cover AVPlayer's QuickTime placeholder glyph.
+            ZStack {
+                LinearGradient(colors: [Color(white: 0.16), Color(white: 0.04)], startPoint: .top, endPoint: .bottom)
+                Image(systemName: "music.note")
+                    .font(.system(size: 64, weight: .light))
+                    .foregroundStyle(.white.opacity(0.35))
+            }
+            .allowsHitTesting(false)
+            .transition(.opacity)
+        } else if coversPlayerSurface, let artwork {
             ZStack {
                 if isAudioOnly {
                     Image(uiImage: artwork)

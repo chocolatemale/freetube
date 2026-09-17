@@ -68,16 +68,19 @@ final class MusicService: MusicServicing, @unchecked Sendable {
     /// "Up next" radio seeded from a track. `RDAMVM<videoId>` is the per-song mix; a playlist
     /// context keeps the queue inside that playlist instead.
     func radio(videoID: String, playlistID: String?) async throws -> [MusicItem] {
-        var body: [String: Any] = [
+        // No `params`: the `wAEB8gECKAE%3D` value some clients send makes YouTube return a
+        // queue with no `playlistPanelRenderer` at all (verified 2026-09-17).
+        let body: [String: Any] = [
             "videoId": videoID,
             "playlistId": playlistID ?? "RDAMVM\(videoID)",
             "isAudioOnly": true,
             "enablePersistentPlaylistPanel": true,
             "tunerSettingValue": "AUTOMIX_SETTING_NORMAL"
         ]
-        if playlistID == nil { body["params"] = "wAEB8gECKAE%3D" }
         let root = try await post("next", body: body)
-        return MusicResponseParser.queue(from: root)
+        let queue = MusicResponseParser.queue(from: root)
+        log.info("[music] radio for \(videoID, privacy: .public) → \(queue.count, privacy: .public) items")
+        return queue
     }
 
     // MARK: - Transport

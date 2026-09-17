@@ -19,7 +19,7 @@ import UIKit
 struct RootView: View {
     @Environment(PlayerStateManager.self) private var player
     @Environment(\.scenePhase) private var scenePhase
-    @State private var selectedTab: Tab = .feed
+    @State private var selectedTab: Tab = DebugLaunchOptions.initialTab ?? .feed
     @State private var searchActivation = 0
     @AppStorage("showSubscriptionFeedTab") private var showSubscriptionFeedTab = true
     @AppStorage("showMusicTab") private var showMusicTab = true
@@ -39,7 +39,7 @@ struct RootView: View {
     /// Retained target for the UIKit swipe recognizers installed on LNPopupUI's native bar.
     @State private var popupBarDismissGesture = PopupBarDismissGestureHandler()
 
-    enum Tab: Hashable {
+    enum Tab: String, Hashable {
         case feed, search, music, library, downloads
         /// Not a tab bar item — selecting it (Mac menu / ⌘,) presents the Settings sheet.
         case settings

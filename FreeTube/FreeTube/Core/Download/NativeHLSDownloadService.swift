@@ -119,6 +119,70 @@ nonisolated final class NativeHLSDownloadService: @unchecked Sendable {
         progress(1)
     }
 
+    // MARK: - Progressive sources
+
+    /// True when the resolver handed back a single media file (the audio-only path returns a
+    /// progressive `videoplayback` URL) rather than an HLS playlist. Decided from the URL so no
+    /// bytes are fetched just to find out.
+    static func isProgressiveSource(_ url: URL) -> Bool {
+        let path = url.path.lowercased()
+        if path.hasSuffix(".m3u8") || path.contains("/manifest/") { return false }
+        let mime = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+            .queryItems?.first { $0.name == "mime" }?.value?.lowercased() ?? ""
+        if mime.contains("mpegurl") { return false }
+        return path.contains("/videoplayback") || !mime.isEmpty
+    }
+
+    /// Downloads a progressive file to `destination` in 10 MiB ranged requests — the same shape
+    /// yt-dlp uses for `googlevideo`, whose CDN throttles a single long-lived connection to a
+    /// crawl but serves bounded ranges at full speed. Each chunk is appended to disk as it lands;
+    /// an expired signed URL surfaces as an authorization failure the caller can retry.
+    func downloadProgressive(
+        _ source: URL,
+        to destination: URL,
+        progress: @escaping ProgressHandler
+    ) async throws {
+        let chunk: Int64 = 10 * 1024 * 1024
+        try? FileManager.default.removeItem(at: destination)
+        FileManager.default.createFile(atPath: destination.path, contents: nil)
+        let handle = try FileHandle(forWritingTo: destination)
+        defer { try? handle.close() }
+
+        var offset: Int64 = 0
+        var total: Int64 = -1
+        repeat {
+            try Task.checkCancellation()
+            var request = URLRequest(url: source)
+            request.timeoutInterval = 60
+            request.setValue("bytes=\(offset)-\(offset + chunk - 1)", forHTTPHeaderField: "Range")
+            let (data, response) = try await session.data(for: request)
+            try Self.validate(response)
+            guard let http = response as? HTTPURLResponse else { throw NativeHLSError.incompleteTransfer }
+            if total < 0 {
+                if let contentRange = http.value(forHTTPHeaderField: "Content-Range"),
+                   let totalText = contentRange.split(separator: "/").last,
+                   let parsed = Int64(totalText) {
+                    total = parsed
+                } else if http.statusCode == 200 {
+                    // Server ignored the range and sent everything.
+                    total = Int64(data.count)
+                } else {
+                    throw NativeHLSError.incompleteTransfer
+                }
+            }
+            guard !data.isEmpty else { throw NativeHLSError.incompleteTransfer }
+            try handle.write(contentsOf: data)
+            offset += Int64(data.count)
+            if total > 0 { progress(min(0.99, Double(offset) / Double(total))) }
+        } while offset < total
+
+        if offset != total {
+            log.error("progressive download incomplete: wrote=\(offset, privacy: .public) expected=\(total, privacy: .public)")
+            throw NativeHLSError.incompleteTransfer
+        }
+        progress(1)
+    }
+
     // MARK: - Networking
 
     private func fetchText(_ url: URL) async throws -> String {
@@ -443,6 +507,7 @@ nonisolated final class NativeHLSDownloadService: @unchecked Sendable {
     }
 
     private enum NativeHLSError: LocalizedError {
+        case incompleteTransfer
         case invalidPlaylist
         case missingVideoRendition
         case missingAudioRendition
@@ -455,6 +520,7 @@ nonisolated final class NativeHLSDownloadService: @unchecked Sendable {
 
         var errorDescription: String? {
             switch self {
+            case .incompleteTransfer: return "The download ended before the file was complete."
             case .invalidPlaylist: return "The HLS playlist was invalid."
             case .missingVideoRendition: return "The HLS playlist contained no video rendition."
             case .missingAudioRendition: return "The HLS playlist contained no audio rendition."

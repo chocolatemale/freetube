@@ -76,10 +76,26 @@ and `gwal3n` are configured in the local clone.
   `musicShelfRenderer`. Card sub-rows carry `"Song • 5:38"` and imply the card's artist.
 - Album track rows have no thumbnail of their own; use the header art. Album tracks come back as
   `MUSIC_VIDEO_TYPE_OMV` (videos), search songs as `MUSIC_VIDEO_TYPE_ATV`.
+- `/next` for the radio queue must **not** carry `params: "wAEB8gECKAE%3D"`; with it YouTube
+  returns a `musicQueueRenderer` without any `playlistPanelRenderer` (0 items). Send only
+  `videoId`, `playlistId: RDAMVM<id>`, `isAudioOnly`.
+- `googlevideo` progressive URLs are throttled to ~25 KB/s on one long connection. Download in
+  10 MiB `Range` chunks like yt-dlp does (`NativeHLSDownloadService.downloadProgressive`): the
+  same 5 MB file went from >40 s (unfinished) to 3.6 s. Never feed a progressive URL to the HLS
+  parser — it reads the whole file as text and fails.
 - yt-dlp's EJS request must be sent with `"output_preprocessed": false` on iOS 27, otherwise
   JavaScriptCore → Swift → PythonKit hands back an empty string (`PythonJSBridge`).
 - PythonKit's single-argument `PythonFunction` receives the argument itself, not a tuple;
   `args[0]` indexes the string and sends one character to the solver.
+
+## Driving the UI without a screen
+
+Debug builds honour launch arguments (`DebugLaunchOptions`), e.g.
+`xcrun simctl launch <udid> com.leshko.freetube -FTInitialTab music -FTMusicSurface library`,
+`-FTMusicBrowse MPREb_…`, `-FTMusicQuery "daft punk"`, `-FTMusicPlay <videoId>`,
+`-FTMusicDownload <videoId>`. Pair with `xcrun simctl io <udid> screenshot` and
+`xcrun simctl spawn <udid> log stream --level debug --predicate 'subsystem == "com.leshko.freetube"'`.
+Xcode 27 ships no Simulator.app; the GUI is `Xcode.app/Contents/Applications/DeviceHub.app`.
 
 ## Product decisions worth knowing
 

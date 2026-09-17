@@ -1,5 +1,7 @@
 import Foundation
 
+private let musicLog = AppLog(subsystem: "com.leshko.freetube", category: "PlayerStateManager")
+
 /// Music-tab entry points into the shared player. Everything downstream — mini-player,
 /// lock-screen controls, AirPlay, background audio, watch history — is the existing pipeline; the
 /// only differences are the audio-only stream selection and the album-art surface.
@@ -34,7 +36,13 @@ extension PlayerStateManager {
         guard videos.count < 5 else { return }
         Task { [weak self] in
             guard let self else { return }
-            let radio = (try? await music.radio(videoID: track.id, playlistID: nil)) ?? []
+            let radio: [MusicItem]
+            do {
+                radio = try await music.radio(videoID: track.id, playlistID: nil)
+            } catch {
+                musicLog.notice("playMusic: radio fetch failed for \(track.id, privacy: .public): \(String(describing: error), privacy: .public)")
+                return
+            }
             guard self.currentVideo?.id == track.id, self.isAudioOnlySession else { return }
             let existing = Set(self.queue.items.map(\.id))
             self.queue.append(contentsOf: radio.filter { !existing.contains($0.id) }.map(\.asVideo))
