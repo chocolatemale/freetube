@@ -72,6 +72,11 @@ final class SettingsViewModel {
         set { preferences.showSubscriptionFeedTab = newValue }
     }
 
+    var showMusicTab: Bool {
+        get { preferences.showMusicTab }
+        set { preferences.showMusicTab = newValue }
+    }
+
     var showComments: Bool {
         get { preferences.showComments }
         set { preferences.showComments = newValue }

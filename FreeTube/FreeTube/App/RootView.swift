@@ -5,12 +5,16 @@ import UIKit
 
 /// Top-level tabbed shell. CLAUDE.md §8: mini-player sits above the tab bar and persists across tabs.
 ///
-/// Tab layout (5):
-/// - Feed (latest cached videos from local subscriptions)
+/// Tab layout (5 visible):
+/// - Feed (latest cached videos from local subscriptions; optional)
 /// - Search (search field, suggestions, results, and local recent searches)
+/// - Music (YouTube Music home / explore / library, audio-only playback; optional)
 /// - Library (subsumes the former Account + Subscriptions tabs; includes Favorites/Recents/Playlists/Login)
 /// - Downloads (saved videos, transfer queue, and yt-dlp link downloads)
-/// - Settings (preferences, quality, reset-session)
+///
+/// Settings is a sheet (gear button in Library, ⌘, on Mac) rather than a sixth tab: iPhone folds
+/// anything past five tabs into a "More" list, which is worse than one extra tap for a screen
+/// nobody visits daily.
 @available(iOS 17.0, *)
 struct RootView: View {
     @Environment(PlayerStateManager.self) private var player
@@ -18,8 +22,11 @@ struct RootView: View {
     @State private var selectedTab: Tab = .feed
     @State private var searchActivation = 0
     @AppStorage("showSubscriptionFeedTab") private var showSubscriptionFeedTab = true
+    @AppStorage("showMusicTab") private var showMusicTab = true
+    @State private var showingSettings = false
     @State private var feedNavigationRequest: AppNavigationRequest?
     @State private var searchNavigationRequest: AppNavigationRequest?
+    @State private var musicNavigationRequest: AppNavigationRequest?
     @State private var libraryNavigationRequest: AppNavigationRequest?
     @State private var downloadsNavigationRequest: AppNavigationRequest?
     /// Direct observation of the shared download manager — no AsyncStream subscription needed since
@@ -33,7 +40,9 @@ struct RootView: View {
     @State private var popupBarDismissGesture = PopupBarDismissGestureHandler()
 
     enum Tab: Hashable {
-        case feed, search, library, downloads, settings
+        case feed, search, music, library, downloads
+        /// Not a tab bar item — selecting it (Mac menu / ⌘,) presents the Settings sheet.
+        case settings
     }
 
     private var activeDownloadsCount: Int {
@@ -133,9 +142,18 @@ struct RootView: View {
         // notification is meaningful only on Mac (where the menu bar exists) and on iPad
         // with a hardware keyboard; everywhere else nobody posts it and this is a no-op.
         .onReceive(NotificationCenter.default.publisher(for: .freetubeSelectTab)) { note in
-            if let tab = note.object as? Tab {
+            guard let tab = note.object as? Tab else { return }
+            if tab == .settings {
+                showingSettings = true
+            } else {
                 selectedTab = tab
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .freetubeOpenSettings)) { _ in
+            showingSettings = true
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsScreen()
         }
         .onReceive(NotificationCenter.default.publisher(for: .freetubeOpenChannel)) { note in
             guard let channelID = note.object as? String, !channelID.isEmpty else { return }
@@ -151,9 +169,13 @@ struct RootView: View {
         }
         .onAppear {
             if !showSubscriptionFeedTab, selectedTab == .feed { selectedTab = .search }
+            if !showMusicTab, selectedTab == .music { selectedTab = .search }
         }
         .onChange(of: showSubscriptionFeedTab) { _, isVisible in
             if !isVisible, selectedTab == .feed { selectedTab = .search }
+        }
+        .onChange(of: showMusicTab) { _, isVisible in
+            if !isVisible, selectedTab == .music { selectedTab = .search }
         }
     }
 
@@ -171,6 +193,12 @@ struct RootView: View {
                     HomeScreen(searchActivation: searchActivation, navigationRequest: searchNavigationRequest)
                 }
 
+                if showMusicTab {
+                    SwiftUI.Tab("Music", systemImage: "music.note", value: Tab.music) {
+                        MusicScreen(navigationRequest: musicNavigationRequest)
+                    }
+                }
+
                 SwiftUI.Tab("Library", systemImage: "play.square.stack", value: Tab.library) {
                     LibraryScreen(navigationRequest: libraryNavigationRequest)
                 }
@@ -179,10 +207,6 @@ struct RootView: View {
                     DownloadsScreen(navigationRequest: downloadsNavigationRequest)
                 }
                 .badge(activeDownloadsCount > 0 ? activeDownloadsCount : 0)
-
-                SwiftUI.Tab("Settings", systemImage: "gearshape.fill", value: Tab.settings) {
-                    SettingsScreen()
-                }
             }
         } else {
             legacyTabShell
@@ -203,6 +227,12 @@ struct RootView: View {
                 .tabItem { Label("Search", systemImage: "magnifyingglass") }
                 .tag(Tab.search)
 
+            if showMusicTab {
+                MusicScreen(navigationRequest: musicNavigationRequest)
+                    .tabItem { Label("Music", systemImage: "music.note") }
+                    .tag(Tab.music)
+            }
+
             LibraryScreen(navigationRequest: libraryNavigationRequest)
                 .tabItem { Label("Library", systemImage: "play.square.stack") }
                 .tag(Tab.library)
@@ -211,10 +241,6 @@ struct RootView: View {
                 .tabItem { Label("Downloads", systemImage: "arrow.down.circle") }
                 .badge(activeDownloadsCount > 0 ? activeDownloadsCount : 0)
                 .tag(Tab.downloads)
-
-            SettingsScreen()
-                .tabItem { Label("Settings", systemImage: "gearshape.fill") }
-                .tag(Tab.settings)
         }
     }
 
@@ -227,6 +253,14 @@ struct RootView: View {
             set: { newTab in
                 if newTab == .feed, !showSubscriptionFeedTab {
                     selectedTab = .search
+                    return
+                }
+                if newTab == .music, !showMusicTab {
+                    selectedTab = .search
+                    return
+                }
+                if newTab == .settings {
+                    showingSettings = true
                     return
                 }
                 if newTab == .search, selectedTab == .search {
@@ -242,6 +276,7 @@ struct RootView: View {
         switch selectedTab {
         case .feed: feedNavigationRequest = request
         case .search: searchNavigationRequest = request
+        case .music: musicNavigationRequest = request
         case .library: libraryNavigationRequest = request
         case .downloads: downloadsNavigationRequest = request
         case .settings: break

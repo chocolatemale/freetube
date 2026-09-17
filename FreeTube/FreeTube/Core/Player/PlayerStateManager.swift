@@ -55,6 +55,9 @@ final class PlayerStateManager {
     private(set) var duration: TimeInterval = 0
     private(set) var playbackRate: Double
     private(set) var playbackQuality: VideoQuality
+    /// Set by the Music tab: resolve an audio-only stream regardless of the video quality
+    /// preference and keep the album art on the player surface. Cleared by any ordinary `load`.
+    private(set) var isAudioOnlySession = false
     private(set) var isMuted = false
     private(set) var sponsorBlockNotice: SponsorBlockNotice?
     private(set) var sponsorBlockSegments: [SponsorBlockSegment] = []
@@ -342,9 +345,11 @@ final class PlayerStateManager {
         autoplay: Bool = true,
         skipRecommendations: Bool = false,
         expandPlayer: Bool = true,
-        recordInPlaybackHistory: Bool = true
+        recordInPlaybackHistory: Bool = true,
+        audioOnly: Bool = false
     ) {
-        log.info("load(\(video.id, privacy: .public)) autoplay=\(autoplay, privacy: .public) skipRecs=\(skipRecommendations, privacy: .public)")
+        log.info("load(\(video.id, privacy: .public)) autoplay=\(autoplay, privacy: .public) skipRecs=\(skipRecommendations, privacy: .public) audioOnly=\(audioOnly, privacy: .public)")
+        isAudioOnlySession = audioOnly
         persistCurrentPlaybackProgress(force: true)
         resolutionTask?.cancel()
         recommendationTask?.cancel()
@@ -637,12 +642,13 @@ final class PlayerStateManager {
                 item.video,
                 skipRecommendations: item.skipRecommendations,
                 expandPlayer: false,
-                recordInPlaybackHistory: false
+                recordInPlaybackHistory: false,
+                audioOnly: isAudioOnlySession
             )
             return
         }
         if let next = queue.advance() {
-            load(next, skipRecommendations: !queueAcceptsRecommendations, expandPlayer: false)
+            load(next, skipRecommendations: !queueAcceptsRecommendations, expandPlayer: false, audioOnly: isAudioOnlySession)
             return
         }
         // Queue at end. If this queue accepts recommendations and the user hasn't asked for
@@ -665,7 +671,7 @@ final class PlayerStateManager {
                 return
             }
             if let next = self.queue.advance() {
-                self.load(next, skipRecommendations: !self.queueAcceptsRecommendations, expandPlayer: false)
+                self.load(next, skipRecommendations: !self.queueAcceptsRecommendations, expandPlayer: false, audioOnly: self.isAudioOnlySession)
             }
         }
     }
@@ -682,19 +688,20 @@ final class PlayerStateManager {
             item.video,
             skipRecommendations: item.skipRecommendations,
             expandPlayer: false,
-            recordInPlaybackHistory: false
+            recordInPlaybackHistory: false,
+            audioOnly: isAudioOnlySession
         )
     }
 
     /// Starts playback with an explicit playlist context. Unlike a generic recommendation queue,
     /// this retains the playlist title and continuation so the player can identify and extend it.
-    func loadPlaylist(_ details: PlaylistDetails, startAt video: Video, shuffled: Bool = false) {
+    func loadPlaylist(_ details: PlaylistDetails, startAt video: Video, shuffled: Bool = false, audioOnly: Bool = false) {
         let videos = shuffled ? details.videos.shuffled() : details.videos
         guard videos.contains(where: { $0.id == video.id }) else { return }
         queue.isShuffleOn = false
         queue.replace(with: videos)
         if shuffled { queue.isShuffleOn = true }
-        load(video, skipRecommendations: true)
+        load(video, skipRecommendations: true, audioOnly: audioOnly)
         activePlaylist = details.playlist
         playlistRecommendations = []
         playlistContinuationToken = details.continuationToken
@@ -1075,7 +1082,7 @@ final class PlayerStateManager {
             do {
                 candidate = try await resolver.resolve(
                     video: video,
-                    quality: preferences.preferredQuality,
+                    quality: isAudioOnlySession ? .audioOnly : preferences.preferredQuality,
                     excluding: excludedStrategies
                 )
             } catch is CancellationError {

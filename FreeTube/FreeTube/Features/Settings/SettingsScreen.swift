@@ -4,6 +4,7 @@ import SwiftUI
 struct SettingsScreen: View {
     @State private var model = SettingsViewModel()
     @State private var showingResetConfirmation = false
+    @Environment(\.dismiss) private var dismiss
 
     /// Drives the live cache-usage line under the download cache limit picker. The store is
     /// `@Observable`, so reading `entries` here re-renders the view when downloads land or
@@ -69,6 +70,7 @@ struct SettingsScreen: View {
 
                 Section {
                     Toggle("Show subscription feed tab", isOn: Bindable(model).showSubscriptionFeedTab)
+                    Toggle("Show Music tab", isOn: Bindable(model).showMusicTab)
                 } header: {
                     Text("Feed")
                 } footer: {
@@ -252,6 +254,14 @@ struct SettingsScreen: View {
                 }
             }
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                // Settings is presented as a sheet (gear in Library / ⌘,), so it needs its own
+                // way out.
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
             .confirmationDialog("Reset session?", isPresented: $showingResetConfirmation, titleVisibility: .visible) {
                 Button("Reset", role: .destructive) {
                     Task { await SessionManager.shared.handleExpiredSession() }

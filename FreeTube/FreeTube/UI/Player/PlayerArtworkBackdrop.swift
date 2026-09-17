@@ -13,28 +13,50 @@ import UIKit
 /// Ordered *above* `PlayerSurface` in the ZStack on purpose — `AVPlayerViewController`'s view paints
 /// its own opaque black background, so anything underneath it is invisible. `allowsHitTesting(false)`
 /// keeps the system playback controls reachable through the artwork.
+///
+/// For audio-only (Music tab) sessions the stream has no video track, so the artwork stays up for
+/// the whole playback and is fitted rather than filled — album art is square.
 @available(iOS 17.0, *)
 struct PlayerArtworkBackdrop: View {
     let artwork: UIImage?
     let state: PlayerStateManager.LoadState
+    var isAudioOnly: Bool = false
 
     var body: some View {
         if coversPlayerSurface, let artwork {
-            Image(uiImage: artwork)
-                .resizable()
-                // `.fill` rather than `.fit`: YouTube's `hqdefault` thumbnails are 4:3 with the
-                // frame letterboxed inside them, and fitting a 4:3 image into our 16:9 area would
-                // show those baked-in black bars plus fresh pillarboxing. Filling crops them off.
-                .aspectRatio(contentMode: .fill)
-                .clipped()
-                .allowsHitTesting(false)
-                .transition(.opacity)
+            ZStack {
+                if isAudioOnly {
+                    Image(uiImage: artwork)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .blur(radius: 40)
+                        .opacity(0.55)
+                        .clipped()
+                    Image(uiImage: artwork)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .padding(16)
+                        .shadow(color: .black.opacity(0.4), radius: 16, y: 6)
+                } else {
+                    Image(uiImage: artwork)
+                        .resizable()
+                        // `.fill` rather than `.fit`: YouTube's `hqdefault` thumbnails are 4:3 with the
+                        // frame letterboxed inside them, and fitting a 4:3 image into our 16:9 area would
+                        // show those baked-in black bars plus fresh pillarboxing. Filling crops them off.
+                        .aspectRatio(contentMode: .fill)
+                        .clipped()
+                }
+            }
+            .allowsHitTesting(false)
+            .transition(.opacity)
         }
     }
 
     /// True while the player has nothing of its own to draw. `.failed` is included so the error
     /// message reads over the thumbnail instead of over black.
     private var coversPlayerSurface: Bool {
+        if isAudioOnly { return true }
         switch state {
         case .resolving, .buffering, .downloading, .failed:
             return true

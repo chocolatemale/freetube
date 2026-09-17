@@ -35,4 +35,7 @@ struct DownloadMetadata: Codable, Sendable {
     /// header read per row on every body re-evaluation, which was the dominant source of
     /// scroll lag with large libraries.
     let duration: TimeInterval?
+
+    /// `formatID` written for audio-only saves made from the Music tab.
+    static let audioOnlyFormatID = "ytdl-audio"
 }

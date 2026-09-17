@@ -25,15 +25,19 @@ final class SecurityHardeningTests: XCTestCase {
         let jar = HTTPCookieStorage.shared
         XCTAssertEqual(jar.cookieAcceptPolicy, .never)
 
+        // `cookieAcceptPolicy` governs cookies arriving from URL loading — the path
+        // `Set-Cookie` headers take — not the explicit `setCookie(_:)` API.
         let cookie = HTTPCookie(properties: [
             .name: "__Secure-3PSIDTS",
             .value: "rotated",
             .domain: ".youtube.com",
             .path: "/"
         ])!
-        jar.setCookie(cookie)
+        let url = URL(string: "https://www.youtube.com/youtubei/v1/browse")!
+        jar.setCookies([cookie], for: url, mainDocumentURL: url)
         XCTAssertFalse((jar.cookies ?? []).contains { $0.name == "__Secure-3PSIDTS" },
                        "shared jar must not persist session cookies")
+        XCTAssertTrue((jar.cookies(for: url) ?? []).isEmpty)
     }
 
     func testPythonEnvironmentPointsAtBundledCABundle() {

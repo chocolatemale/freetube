@@ -488,7 +488,7 @@ final class DownloadManager: TemporaryDownloading {
                 snapshotID: snapshotID
             )
             try await validateDownloadedFile(at: destination, quality: quality, videoID: video.id)
-            await persistDownloaded(video: video, fileURL: destination)
+            await persistDownloaded(video: video, fileURL: destination, quality: quality)
             publish(snapshot: DownloadTaskSnapshot(
                 id: snapshotID, videoID: video.id, title: video.title,
                 state: .completed(destination), createdAt: .now
@@ -519,7 +519,7 @@ final class DownloadManager: TemporaryDownloading {
                         snapshotID: snapshotID
                     )
                     try await validateDownloadedFile(at: destination, quality: quality, videoID: video.id)
-                    await persistDownloaded(video: video, fileURL: destination)
+                    await persistDownloaded(video: video, fileURL: destination, quality: quality)
                     publish(snapshot: DownloadTaskSnapshot(
                         id: snapshotID, videoID: video.id, title: video.title,
                         state: .completed(destination), createdAt: .now
@@ -694,7 +694,7 @@ final class DownloadManager: TemporaryDownloading {
                 try await validateDownloadedFile(at: destination, quality: quality, videoID: video.id)
                 let dur = Date().timeIntervalSince(startedAt)
                 log.info("yt-dlp[\(video.id, privacy: .public)] FALLBACK SUCCESS in \(String(format: "%.1f", dur), privacy: .public)s")
-                await persistDownloaded(video: video, fileURL: destination)
+                await persistDownloaded(video: video, fileURL: destination, quality: quality)
                 publish(snapshot: DownloadTaskSnapshot(
                     id: snapshotID, videoID: video.id, title: video.title,
                     state: .completed(destination), createdAt: .now
@@ -809,7 +809,7 @@ final class DownloadManager: TemporaryDownloading {
         }
 
         log.debug("yt-dlp[\(video.id, privacy: .public)] writing download metadata xattr")
-        await persistDownloaded(video: video, fileURL: destination)
+        await persistDownloaded(video: video, fileURL: destination, quality: quality)
 
         log.debug("yt-dlp[\(video.id, privacy: .public)] → state=completed")
         publish(snapshot: DownloadTaskSnapshot(
@@ -888,7 +888,7 @@ final class DownloadManager: TemporaryDownloading {
 
     // MARK: - SwiftData
 
-    private func persistDownloaded(video: Video, fileURL: URL) async {
+    private func persistDownloaded(video: Video, fileURL: URL, quality: VideoQuality) async {
         let size = (try? FileManager.default.attributesOfItem(atPath: fileURL.path)[.size] as? NSNumber)?.int64Value ?? 0
         let thumb = await downloadThumbnailData(url: video.thumbnailURL)
         log.debug("persistDownloaded(\(video.id, privacy: .public)) thumb=\(thumb == nil ? "nil" : "\(thumb!.count)B", privacy: .public) size=\(size, privacy: .public)")
@@ -899,7 +899,9 @@ final class DownloadManager: TemporaryDownloading {
             videoID: video.id,
             title: video.title,
             channelName: video.channelName,
-            formatID: "ytdl",
+            // `ytdl-audio` marks Music-tab offline saves so the Music library can list them
+            // separately from video downloads.
+            formatID: quality == .audioOnly ? DownloadMetadata.audioOnlyFormatID : "ytdl",
             originalURL: nil,
             rawThumbnail: thumb,
             at: fileURL

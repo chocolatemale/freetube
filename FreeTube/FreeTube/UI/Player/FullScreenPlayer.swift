@@ -131,7 +131,7 @@ struct FullScreenPlayer: View {
                             player.requestInlinePlaybackRestoration()
                         }
                     )
-                    PlayerArtworkBackdrop(artwork: player.currentArtwork, state: player.loadState)
+                    PlayerArtworkBackdrop(artwork: player.currentArtwork, state: player.loadState, isAudioOnly: player.isAudioOnlySession)
                     DownloadProgressOverlay(state: player.loadState)
                     CustomPlayerControls(
                         isVisible: playerControlsVisible,
@@ -1418,7 +1418,7 @@ struct FullScreenPlayer: View {
     private func queueRow(_ video: Video, preservesPlaylistContext: Bool) -> some View {
         HStack(spacing: 0) {
             Button {
-                player.load(video, skipRecommendations: preservesPlaylistContext)
+                player.load(video, skipRecommendations: preservesPlaylistContext, audioOnly: player.isAudioOnlySession)
             } label: {
                 HStack(spacing: 12) {
                     // Thumbnail with duration badge in the bottom-right corner — same affordance

@@ -132,7 +132,7 @@ final class AppBackupService {
         "hiddenPlayerTopControls", "historyRetentionPolicy", "logToFile", "oledPlayerBackground",
         "playbackRate", "playerTopControlOrder", "preferredQuality", "prefetchVideoDetails",
         "recentFetchURLs", "restrictedSearchMode", "showComments", "showHistoryProgressBars",
-        "showSubscriptionFeedTab", "showUpNext", "sponsorBlockEnabled",
+        "showSubscriptionFeedTab", "showMusicTab", "showUpNext", "sponsorBlockEnabled",
         "sponsorBlockHighlightBehavior", "sponsorBlockInteraction", "sponsorBlockInteractionBehavior",
         "sponsorBlockIntro", "sponsorBlockIntroBehavior", "sponsorBlockOutro",
         "sponsorBlockOutroBehavior", "sponsorBlockSelfPromotion", "sponsorBlockSelfPromotionBehavior",
