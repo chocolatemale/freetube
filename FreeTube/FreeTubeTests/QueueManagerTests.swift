@@ -1,9 +1,6 @@
 import XCTest
 @testable import FreeTube
 
-// Not `@MainActor`: XCTest instantiates test cases off the main thread while enumerating them,
-// and a main-actor-isolated `init` then aborts with SIGABRT ("crashed while preparing to run
-// tests"). `QueueManager` is a plain `@Observable` class and needs no actor.
 @available(iOS 17.0, *)
 final class QueueManagerTests: XCTestCase {
     func testPlayNextSelectionsRemainFIFO() {

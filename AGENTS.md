@@ -28,6 +28,16 @@ and `gwal3n` are configured in the local clone.
 - **Xcode 27 license.** `xcodebuild` and even `git` (when `DEVELOPER_DIR` points at Xcode.app)
   refuse to run until `sudo xcodebuild -license accept`. Do not export `DEVELOPER_DIR` in a
   shell you also use for git. Syntax-only checks work without Xcode: `xcrun swiftc -parse file`.
+- **Xcode 27 + LNPopupController 4.5.9 cannot build locally out of the box.** The package's
+  `Package.swift` derives header search paths from `Context.packageDirectory`, which Xcode 27
+  reports differently, so every path comes out as `…/troller/LNPopupController/Private/…` and the
+  ObjC target fails with `'LNPopupBarAppearanceChainProxy.h' file not found`. CI (Xcode 26.6) is
+  unaffected. Local workaround until upstream fixes it: `chmod u+w` the manifest in
+  `DerivedData/…/SourcePackages/checkouts/LNPopupController/Package.swift` and make
+  `targetRelativePath` anchor on the `/LNPopupController/LNPopupController/Private` marker
+  instead of replacing `packageBase.path`. Re-apply after any package re-resolution.
+- **Do not put DerivedData under `/tmp`.** The `/tmp` → `/private/tmp` symlink makes clang see
+  two spellings of the same path and header lookups fail. Use the default DerivedData location.
 - **Pure-Foundation code can be type-checked and run on macOS** with the CommandLineTools
   `swiftc` (`MusicResponseParser` was developed this way against captured JSON). Anything
   importing SwiftUI/UIKit/PythonKit cannot.
@@ -41,11 +51,15 @@ and `gwal3n` are configured in the local clone.
 - Xcode's `PBXFileSystemSynchronizedRootGroup` means new files under `FreeTube/FreeTube` and
   `FreeTube/FreeTubeTests` are picked up automatically — including `Resources/*.pem` and
   `Fixtures/*.json`. Do not hand-edit `project.pbxproj` to add files.
-- **Never mark an `XCTestCase` subclass `@MainActor`.** XCTest creates the instances off the main
-  thread while enumerating tests; the isolated `init` aborts with SIGABRT and the report says
-  "crashed while preparing to run tests" — for every test in the class, with 0.000s duration.
-  This is what `QueueManagerTests` did and why Gwal3n disabled the CI test step. Mark
-  individual test methods `@MainActor` if they really need it.
+- **`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` is on for both targets.** Every class without
+  `nonisolated` is implicitly `@MainActor` and gets an *isolated deinit*. On the iOS 26.2 simulator
+  under Xcode 27 the back-deploy shim for that deinit
+  (`swift_task_deinitOnExecutorMainActorBackDeploy`) double-frees → SIGABRT
+  ("pointer being freed was not allocated") the first time such an object is deallocated. The app
+  never deallocates its singletons, so only unit tests saw it: `QueueManagerTests` crashed for
+  months and Gwal3n disabled the whole test step instead. Model / data classes that tests create
+  and drop must be `nonisolated` (as `QueueManager` now is). Diagnose this class of failure from
+  the `.ips` frames the tests workflow prints, not by guessing at the test code.
 - `HTTPCookieStorage.cookieAcceptPolicy` only governs cookies arriving through URL loading
   (`setCookies(_:for:mainDocumentURL:)`). `setCookie(_:)` bypasses it; a test that used it to
   prove the lockdown was wrong, not the lockdown.

@@ -1,9 +1,16 @@
 import Foundation
 import OSLog
 
+/// `nonisolated` on purpose. The project sets `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, which
+/// would make this class implicitly main-actor isolated and give it an *isolated deinit*. On the
+/// iOS 26.2 simulator with Xcode 27 that deinit path
+/// (`swift_task_deinitOnExecutorMainActorBackDeploy`) double-frees and aborts the process the
+/// first time a `QueueManager` is deallocated — which never happens in the app (it lives on the
+/// `PlayerStateManager` singleton) but happens at the end of every unit test. The queue is plain
+/// data with no UI dependency, so it has no reason to be actor-isolated.
 @available(iOS 17.0, *)
 @Observable
-final class QueueManager {
+nonisolated final class QueueManager {
     enum RepeatMode: String, CaseIterable, Sendable {
         case off, all, one
     }
