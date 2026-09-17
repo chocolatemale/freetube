@@ -25,6 +25,14 @@ final class MusicSurfaceViewModel {
 
     func load(force: Bool = false) async {
         guard force || !hasLoaded, !isLoading else { return }
+        if surface.requiresAccount {
+            // The screen shows a sign-in prompt instead; an anonymous request would only
+            // produce an error toast.
+            guard case .loggedIn = AuthState.shared.status else {
+                shelves = []
+                return
+            }
+        }
         isLoading = true
         defer { isLoading = false }
         do {

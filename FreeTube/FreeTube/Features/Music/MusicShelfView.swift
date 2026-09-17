@@ -6,6 +6,19 @@ enum MusicRoute: Hashable {
     case browse(String)
 }
 
+/// Lets menus and context menus push a browse page. `NavigationLink` does not reliably fire from
+/// inside `Menu` / `.contextMenu`, so those call `open(_:)` and `MusicScreen` appends to its path.
+@available(iOS 17.0, *)
+@Observable
+@MainActor
+final class MusicNavigator {
+    private(set) var pending: (id: UUID, route: MusicRoute)?
+
+    func open(_ browseID: String) {
+        pending = (UUID(), .browse(browseID))
+    }
+}
+
 /// Renders one `MusicShelf` in the layout YouTube Music uses for it: a horizontally scrolling
 /// row of square tiles, a vertical list of song rows, or a two-column grid.
 @available(iOS 17.0, *)
@@ -133,19 +146,33 @@ struct MusicRow: View {
     private var isCurrent: Bool { player.currentVideo?.id == item.id }
 
     var body: some View {
-        Group {
+        HStack(spacing: 0) {
+            Group {
+                if item.isPlayable {
+                    Button { player.playMusic(item, in: context) } label: { content }
+                        .buttonStyle(.plain)
+                } else {
+                    NavigationLink(value: MusicRoute.browse(item.id)) { content }
+                        .buttonStyle(.plain)
+                }
+            }
+            .contextMenu { MusicItemMenu(item: item, context: context) }
             if item.isPlayable {
-                Button { player.playMusic(item, in: context) } label: { label }
-                    .buttonStyle(.plain)
-            } else {
-                NavigationLink(value: MusicRoute.browse(item.id)) { label }
-                    .buttonStyle(.plain)
+                Menu {
+                    MusicItemMenu(item: item, context: context)
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .padding(.trailing, 4)
             }
         }
-        .contextMenu { MusicItemMenu(item: item, context: context) }
     }
 
-    private var label: some View {
+    private var content: some View {
         HStack(spacing: 12) {
             if let index {
                 Text("\(index)")
@@ -180,19 +207,10 @@ struct MusicRow: View {
                 Image(systemName: "chevron.right")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.tertiary)
-            } else {
-                Menu {
-                    MusicItemMenu(item: item, context: context)
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .frame(width: 32, height: 44)
-                        .contentShape(Rectangle())
-                }
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.leading, 16)
+        .padding(.trailing, item.isPlayable ? 4 : 16)
         .padding(.vertical, 6)
         .contentShape(Rectangle())
     }
@@ -270,6 +288,7 @@ struct MusicItemMenu: View {
     let item: MusicItem
     let context: [MusicItem]
     @Environment(PlayerStateManager.self) private var player
+    @Environment(MusicNavigator.self) private var navigator
 
     var body: some View {
         if item.isPlayable {
@@ -278,15 +297,18 @@ struct MusicItemMenu: View {
             Button { player.playMusic(item, in: [item]) } label: { Label("Start radio", systemImage: "dot.radiowaves.left.and.right") }
             Divider()
             if DownloadManager.shared.localFile(for: item.id) != nil {
-                Label("Downloaded", systemImage: "checkmark.circle")
+                Button {} label: { Label("Downloaded", systemImage: "checkmark.circle") }
+                    .disabled(true)
             } else {
                 Button { PlayerStateManager.downloadForOffline(item) } label: { Label("Download", systemImage: "arrow.down.circle") }
             }
             if let artist = item.artistBrowseID {
-                NavigationLink(value: MusicRoute.browse(artist)) { Label("Go to artist", systemImage: "person") }
+                Button { navigator.open(artist) } label: { Label("Go to artist", systemImage: "person") }
             }
             if let playlist = item.playlistID, !playlist.hasPrefix("RD") {
-                NavigationLink(value: MusicRoute.browse(playlist.hasPrefix("VL") ? playlist : "VL" + playlist)) {
+                Button {
+                    navigator.open(playlist.hasPrefix("VL") ? playlist : "VL" + playlist)
+                } label: {
                     Label("Go to album", systemImage: "square.stack")
                 }
             }

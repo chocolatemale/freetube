@@ -21,6 +21,7 @@ struct MusicScreen: View {
     @State private var isSearchPresented = false
     @State private var showingLogin = false
     @State private var auth = AuthState.shared
+    @State private var navigator = MusicNavigator()
     @Environment(PlayerStateManager.self) private var player
 
     private var isSignedIn: Bool {
@@ -70,6 +71,10 @@ struct MusicScreen: View {
                     path.append(destination)
                 }
             }
+            .onChange(of: navigator.pending?.id) { _, _ in
+                guard let route = navigator.pending?.route else { return }
+                path.append(route)
+            }
             .task(id: surface) { await current.load() }
             .refreshable { await current.load(force: true) }
             .onChange(of: auth.status) { _, _ in
@@ -81,6 +86,7 @@ struct MusicScreen: View {
             .errorToast(Bindable(current).errorState)
             .errorToast(Bindable(search).errorState)
         }
+        .environment(navigator)
     }
 
     private var current: MusicSurfaceViewModel {
