@@ -42,5 +42,5 @@ xcodebuild build \
 APP="$(find "$DERIVED/Build/Products/Release-iphoneos" -maxdepth 1 -name 'FreeTube.app' -print -quit)"
 [[ -n "$APP" ]] || { echo "Build failed — see output above."; exit 1; }
 xcrun devicectl device install app --device "$UDID" "$APP"
-xcrun devicectl device process launch --device "$UDID" uk.icoco.freetube || true
+xcrun devicectl device process launch --device "$UDID" xyz.freetube.app || true
 echo "Installed. If the app refuses to open, trust the developer profile in Settings › General › VPN & Device Management."

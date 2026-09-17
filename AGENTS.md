@@ -95,7 +95,7 @@ and `gwal3n` are configured in the local clone.
 ## Driving the UI without a screen
 
 Debug builds honour launch arguments (`DebugLaunchOptions`), e.g.
-`xcrun simctl launch <udid> uk.icoco.freetube -FTInitialTab music -FTMusicSurface library`,
+`xcrun simctl launch <udid> xyz.freetube.app -FTInitialTab music -FTMusicSurface library`,
 `-FTMusicBrowse MPREb_…`, `-FTMusicQuery "daft punk"`, `-FTMusicPlay <videoId>`,
 `-FTMusicDownload <videoId>`. Pair with `xcrun simctl io <udid> screenshot` and
 `xcrun simctl spawn <udid> log stream --level debug --predicate 'subsystem == "com.leshko.freetube"'`.
@@ -103,10 +103,27 @@ Xcode 27 ships no Simulator.app; the GUI is `Xcode.app/Contents/Applications/Dev
 
 ## Product decisions worth knowing
 
-- Bundle ID is `uk.icoco.freetube` (this fork's own App Store Connect record; `com.leshko.freetube`
+- Bundle ID is `xyz.freetube.app` (this fork's own App Store Connect record; `com.leshko.freetube`
   belongs to upstream and cannot be uploaded from another team). The `os.Logger` subsystem,
   Keychain service and notification names deliberately stay `com.leshko.freetube` — they are
   namespaces, not identities, and changing them would orphan existing installs' Keychain items.
+- **TestFlight** uses the paid Individual team `8A52V3MFHD` (same as 一一 / Stanza), API key
+  `X3HPUJ2HZ6`, issuer `ea3f9eb6-9efb-4a16-aadb-3d659f3d7553`. App *records* cannot be created
+  via the App Store Connect API on this account (403: apps does not allow CREATE) — first-time
+  setup is Apps › + › New App in the web UI, bundle ID `xyz.freetube.app`
+  (identifier `XDD9Z87KZ2`, App Store Connect app "FreeTuber" / `6812986341`).
+  `scripts/testflight.sh` injects signing at archive time; do not commit `DEVELOPMENT_TEAM` into
+  `project.pbxproj`. Reuse the LNPopup-patched DerivedData or the archive fails on Xcode 27.
+  Do **not** pass the ASC API key to `xcodebuild archive` / `-exportArchive` — that key has no
+  cloud Distribution-cert permission and export fails with "Cloud signing permission error".
+  Sign with the Xcode-logged-in Apple ID (`-allowProvisioningUpdates` only); use the API key
+  solely for `altool --upload-app`. Internal Testing only — external review will not pass a
+  YouTube client with downloads.
+- **`NSCameraUsageDescription` is required for TestFlight even though FreeTube never
+  opens the camera.** Apple's static scan (`ITMS-90683`) sees WebKit / AVFoundation
+  camera symbols from the login `WKWebView`. Removing the key (the 2026-09 audit)
+  makes the uploaded build unusable. Keep an honest sign-in-page explanation; do not
+  restore the upstream "profile picture" lie.
 
 - Home = YouTube's `FEwhat_to_watch` when signed in (`HomeFeedService`, raw InnerTube WEB browse
   with cookies + `www.youtube.com` SAPISIDHASH), local subscription feed when signed out. Anonymous

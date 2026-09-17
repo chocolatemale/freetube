@@ -107,9 +107,13 @@ on-path substitution, not a second trust root.)
 the session. Removed; the history is preserved in a comment explaining why cookies must never be
 handed to yt-dlp (and why it made extraction worse).
 
-### L1 — Unused camera permission string  *(fixed)*
+### L1 — Unused camera permission string  *(fixed, then restored for ITMS-90683)*
 
-`NSCameraUsageDescription` was declared with no camera code anywhere. Removed.
+`NSCameraUsageDescription` was declared with no camera code anywhere. The upstream
+string ("take a photo for your profile picture") was a lie and was removed. App Store
+Connect still rejects the binary (`ITMS-90683`) because WebKit's login `WKWebView`
+links camera APIs. Keep an honest purpose string; do not restore the profile-picture
+wording, and do not add actual camera code.
 
 ### L2 — Unused background-download scaffolding  *(fixed)*
 
