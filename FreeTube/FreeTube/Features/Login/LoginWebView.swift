@@ -36,29 +36,29 @@ struct LoginWebView: UIViewRepresentable {
         init(parent: LoginWebView) { self.parent = parent }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-            LoginWebView.log.debug("[webview] didStart: \(webView.url?.absoluteString ?? "?", privacy: .public)")
+            LoginWebView.log.debug("[webview] didStart: \(SecurityHardening.redactedForLog(webView.url), privacy: .public)")
         }
 
         func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-            LoginWebView.log.debug("[webview] didCommit: \(webView.url?.absoluteString ?? "?", privacy: .public)")
+            LoginWebView.log.debug("[webview] didCommit: \(SecurityHardening.redactedForLog(webView.url), privacy: .public)")
             Task { @MainActor in
                 parent.coordinator.handleNavigation(to: webView.url, in: webView)
             }
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            LoginWebView.log.debug("[webview] didFinish: \(webView.url?.absoluteString ?? "?", privacy: .public)")
+            LoginWebView.log.debug("[webview] didFinish: \(SecurityHardening.redactedForLog(webView.url), privacy: .public)")
             Task { @MainActor in
                 parent.coordinator.handleNavigation(to: webView.url, in: webView)
             }
         }
 
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            LoginWebView.log.error("[webview] didFail: \(error.localizedDescription, privacy: .public) url=\(webView.url?.absoluteString ?? "?", privacy: .public)")
+            LoginWebView.log.error("[webview] didFail: \(error.localizedDescription, privacy: .public) url=\(SecurityHardening.redactedForLog(webView.url), privacy: .public)")
         }
 
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-            LoginWebView.log.error("[webview] didFailProvisional: \(error.localizedDescription, privacy: .public) url=\(webView.url?.absoluteString ?? "?", privacy: .public)")
+            LoginWebView.log.error("[webview] didFailProvisional: \(error.localizedDescription, privacy: .public) url=\(SecurityHardening.redactedForLog(webView.url), privacy: .public)")
         }
     }
 }

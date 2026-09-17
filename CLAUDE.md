@@ -51,7 +51,7 @@ These come first. Violating them breaks the project.
 | Images | `Kingfisher` |
 | Secure storage | `Security` (raw Keychain via `KeychainHelper`) |
 | Persistence | `SwiftData` (`@Model`); `UserDefaults` for simple flags via `UserPreferences` |
-| Background work | `BackgroundTasks` framework + `URLSession` background config (`BackgroundDownloadCoordinator`) |
+| Background work | `audio` background mode only. Downloads run in-process (yt-dlp / `NativeHLSDownloadService`); there is no background `URLSession` — the unused scaffolding was removed in the 2026-09 security audit |
 | Logging | `os.Logger` with subsystem `com.leshko.freetube` |
 | JavaScript runtime | `JavaScriptCore` (`JSContext`) — solves YouTube's N/SIG cipher challenges in-process by faking the `deno` runtime to yt-dlp; see §15.11 |
 
@@ -79,7 +79,7 @@ FreeTube/
 │   │                      # AudioSessionConfigurator, NowPlayingCenter,
 │   │                      # RemoteCommandCenter, StreamURLCache, HLSResourceLoaderDelegate
 │   ├── Download/          # DownloadManager (yt-dlp orchestration),
-│   │                      # BackgroundDownloadCoordinator, DownloadTask
+│   │                      # DownloadTask, YtDlpUpdater (verified weekly refresh)
 │   ├── JavaScript/        # JSEvaluator (JSContext wrapper), PythonJSBridge
 │   │                      # (yt-dlp ↔ JSCore glue), FreeTubeYtDlp (forked
 │   │                      # entry point that splices the bridge), EJSResources
@@ -405,8 +405,23 @@ and a rejected strategy is excluded before requesting the next candidate.
 
 ### Background URL session
 
-- `BackgroundDownloadCoordinator` configures `URLSession(.background(withIdentifier:))` so user-initiated direct-URL downloads (tier 2 strategy 1/2) survive backgrounding.
-- `BGProcessingTaskRequest` is registered for resuming downloads at next launch.
+- There is none. `BackgroundDownloadCoordinator` and the `BGProcessingTask` registration were
+  removed in the 2026-09 security audit: nothing ever submitted a task to that session and the
+  delegate dropped finished files on the floor. If background downloads are ever needed, build a
+  persistent queue first; do not resurrect the old file.
+
+### Security invariants (see SECURITY-AUDIT.md)
+
+- `SecurityHardening.configureAtLaunch()` runs first in `AppEnvironment.init`. It locks
+  `HTTPCookieStorage.shared` to `.never` (YouTubeKit uses `URLSession.shared`, whose jar is on
+  disk), exports `SSL_CERT_FILE` → bundled `Resources/cacert.pem`, and moves the yt-dlp cache to
+  `Library/Caches`.
+- **Never** pass `--no-check-certificates` / `nocheckcertificate` to yt-dlp again.
+- **Never** hand cookies to yt-dlp (`--cookies`, `cookiefile`). It made extraction worse and puts
+  the session on disk.
+- Diagnostic logs live in `Library/Application Support/Logs`, never `Documents`.
+- Log URLs through `SecurityHardening.redactedForLog(_:)`; never `absoluteString`.
+- `AppLog` redacts unannotated interpolations. Mark values `privacy: .public` explicitly.
 
 ### Cache limit
 

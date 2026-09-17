@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import Observation
 import OSLog
@@ -68,7 +69,8 @@ final class YtDlpUpdater {
     /// delayed by network. Skips the refresh if the cached file is fresher than the TTL.
     func refreshIfStale() {
         let last = preferences.lastYtDlpUpdate
-        if let last, Date().timeIntervalSince(last) < Self.ttl {
+        let moduleInstalled = FileManager.default.fileExists(atPath: YoutubeDL.pythonModuleURL.path)
+        if moduleInstalled, let last, Date().timeIntervalSince(last) < Self.ttl {
             log.info("yt-dlp is fresh (last updated \(last, privacy: .public)); skipping TTL refresh")
             return
         }
@@ -99,7 +101,7 @@ final class YtDlpUpdater {
 
         log.info("Downloading yt-dlp (force=\(force, privacy: .public))")
         do {
-            try await YoutubeDL.downloadPythonModule()
+            try await Self.downloadVerifiedModule()
         } catch {
             let msg = "Download failed: \(error.localizedDescription)"
             log.error("\(msg, privacy: .public)")
@@ -163,5 +165,89 @@ final class YtDlpUpdater {
     enum YtDlpVersionError: LocalizedError {
         case notReadable
         var errorDescription: String? { "yt_dlp.version.__version__ could not be read as String" }
+    }
+
+    // MARK: - Verified download
+
+    /// yt-dlp is *Python source that we execute in-process* with the app's full sandbox
+    /// access, refreshed weekly from the network. `YoutubeDL.downloadPythonModule()` moves
+    /// whatever bytes arrive straight into place. This variant fetches the release's
+    /// `SHA2-256SUMS` alongside the zipapp and refuses to install anything whose digest does
+    /// not match — so a truncated download, a CDN hiccup, or an on-path substitution cannot
+    /// replace the interpreter's most privileged input. Both files come from the same GitHub
+    /// release over system-verified TLS; the check is integrity, not a second trust root.
+    nonisolated static func downloadVerifiedModule() async throws {
+        let base = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/"
+        guard let sumsURL = URL(string: base + "SHA2-256SUMS"),
+              let moduleURL = URL(string: base + "yt-dlp") else {
+            throw VerifiedDownloadError.badURL
+        }
+
+        let session = URLSession(configuration: .ephemeral)
+        let (sumsData, sumsResponse) = try await session.data(from: sumsURL)
+        try Self.requireOK(sumsResponse, what: "SHA2-256SUMS")
+        guard let sums = String(data: sumsData, encoding: .utf8),
+              let expected = Self.expectedDigest(in: sums, for: "yt-dlp") else {
+            throw VerifiedDownloadError.checksumUnavailable
+        }
+
+        let (location, moduleResponse) = try await session.download(from: moduleURL)
+        defer { try? FileManager.default.removeItem(at: location) }
+        try Self.requireOK(moduleResponse, what: "yt-dlp")
+
+        let actual = try Self.sha256Hex(ofFileAt: location)
+        guard actual == expected else {
+            throw VerifiedDownloadError.checksumMismatch
+        }
+
+        let destination = YoutubeDL.pythonModuleURL
+        try? FileManager.default.removeItem(at: destination)
+        try FileManager.default.moveItem(at: location, to: destination)
+    }
+
+    private nonisolated static func requireOK(_ response: URLResponse, what: String) throws {
+        if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
+            throw VerifiedDownloadError.http(status: http.statusCode, what: what)
+        }
+    }
+
+    /// Parses the `<hex>  <filename>` lines of a `SHA2-256SUMS` file.
+    nonisolated static func expectedDigest(in sums: String, for filename: String) -> String? {
+        for line in sums.split(whereSeparator: \.isNewline) {
+            let parts = line.split(whereSeparator: \.isWhitespace)
+            guard parts.count >= 2, parts[1] == filename[...] else { continue }
+            let hex = parts[0].lowercased()
+            guard hex.count == 64, hex.allSatisfy(\.isHexDigit) else { return nil }
+            return hex
+        }
+        return nil
+    }
+
+    private nonisolated static func sha256Hex(ofFileAt url: URL) throws -> String {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var hasher = SHA256()
+        while true {
+            let chunk = try handle.read(upToCount: 1 << 20) ?? Data()
+            if chunk.isEmpty { break }
+            hasher.update(data: chunk)
+        }
+        return hasher.finalize().map { String(format: "%02x", $0) }.joined()
+    }
+
+    enum VerifiedDownloadError: LocalizedError {
+        case badURL
+        case checksumUnavailable
+        case checksumMismatch
+        case http(status: Int, what: String)
+
+        var errorDescription: String? {
+            switch self {
+            case .badURL: return "Invalid yt-dlp release URL."
+            case .checksumUnavailable: return "Release checksum file could not be read."
+            case .checksumMismatch: return "Downloaded yt-dlp does not match the published SHA-256 checksum; not installed."
+            case .http(let status, let what): return "HTTP \(status) while fetching \(what)."
+            }
+        }
     }
 }

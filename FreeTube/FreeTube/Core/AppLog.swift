@@ -10,6 +10,9 @@ public enum AppLogPrivacy: Sendable {
 public struct AppLogMessage: ExpressibleByStringLiteral, ExpressibleByStringInterpolation, Sendable {
     fileprivate let text: String
 
+    /// The message exactly as it will reach the unified log and the diagnostics file.
+    var renderedText: String { text }
+
     public init(stringLiteral value: String) { text = value }
     public init(stringInterpolation: StringInterpolation) { text = stringInterpolation.output }
 
@@ -22,8 +25,12 @@ public struct AppLogMessage: ExpressibleByStringLiteral, ExpressibleByStringInte
         }
 
         public mutating func appendLiteral(_ literal: String) { output.append(literal) }
+        /// Unannotated interpolations are redacted, matching `os.Logger`'s own default. Every
+        /// rendered message is emitted with `privacy: .public` (so Console.app shows it) and
+        /// mirrored verbatim to the diagnostics file, so the *only* place a value can be marked
+        /// safe is at the call site. Opt in with `privacy: .public` for each value.
         public mutating func appendInterpolation<T>(_ value: T) {
-            output.append(String(describing: value))
+            output.append("<private>")
         }
         public mutating func appendInterpolation<T>(_ value: T, privacy: AppLogPrivacy) {
             switch privacy {

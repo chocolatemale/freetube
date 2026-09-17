@@ -9,13 +9,16 @@ final class AppEnvironment {
     let playerStateManager = PlayerStateManager()
 
     init() {
-        // Touch `LogFileWriter.shared` first so the file-logging writer (if enabled)
+        // Security defaults come before anything that could touch the network or Python:
+        // cookie-jar lockdown, CA bundle for embedded OpenSSL, cache paths. See
+        // `SecurityHardening` and SECURITY-AUDIT.md.
+        SecurityHardening.configureAtLaunch()
+        // Touch `LogFileWriter.shared` next so the file-logging writer (if enabled)
         // captures every subsequent line in this init — audio session setup, remote
         // commands, BG task registration, and yt-dlp TTL refresh.
         _ = LogFileWriter.shared
         AudioSessionConfigurator.configure()
         RemoteCommandCenter.wire(to: playerStateManager)
-        BackgroundDownloadCoordinator.shared.registerBackgroundTasks()
         if let cutoff = UserPreferences().historyRetentionPolicy.cutoffDate() {
             Task { await PersistenceWriter.shared.clearWatchHistory(olderThan: cutoff) }
         }

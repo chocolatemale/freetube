@@ -85,8 +85,9 @@ nonisolated enum PythonJSBridge {
             }
 
             do {
-                log.debug("JavaScriptCore challenge evaluating \(code.utf8.count, privacy: .public) input bytes; consoleLog=\(code.contains("console.log"), privacy: .public)")
-                let result = try JSEvaluator.evaluate(wrapForStdoutCapture(code))
+                let solverCode = withoutPreprocessedPlayerCache(code)
+                log.debug("JavaScriptCore challenge evaluating \(solverCode.utf8.count, privacy: .public) input bytes; consoleLog=\(solverCode.contains("console.log"), privacy: .public)")
+                let result = try JSEvaluator.evaluate(wrapForStdoutCapture(solverCode))
                 log.debug("JavaScriptCore challenge completed with \(result.utf8.count, privacy: .public) output bytes")
                 return PythonObject(result)
             } catch {
@@ -99,6 +100,28 @@ nonisolated enum PythonJSBridge {
 
         let builtins = Python.import("builtins")
         builtins.eval_js = evalJS.pythonObject
+    }
+
+    /// Turns off the EJS solver's `output_preprocessed` request flag.
+    ///
+    /// When set, the solver echoes the multi-megabyte preprocessed `player.js` back in its
+    /// JSON result so yt-dlp can cache it. yt-dlp's current EJS provider never enables that
+    /// cache, so the payload is dead weight — and on iOS 27 a result that large coming back
+    /// through JavaScriptCore → Swift → PythonKit arrives as an *empty* string, which yt-dlp
+    /// then reports as a JSON decoding failure and playback resolution fails. Only the much
+    /// smaller `responses` array is needed.
+    ///
+    /// The request is serialised by Python's `json.dumps`, whose whitespace is not a stable
+    /// contract, so match the property with a regex rather than one exact spelling.
+    static func withoutPreprocessedPlayerCache(_ userCode: String) -> String {
+        let pattern = #""output_preprocessed"\s*:\s*true"#
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return userCode }
+        let range = NSRange(userCode.startIndex..., in: userCode)
+        return regex.stringByReplacingMatches(
+            in: userCode,
+            range: range,
+            withTemplate: "\"output_preprocessed\":false"
+        )
     }
 
     /// Wraps yt-dlp's stdin-style JS payload in an IIFE that:
@@ -155,7 +178,7 @@ nonisolated enum PythonJSBridge {
         builtins.__ft_ejs_version__ = PythonObject(EJSResources.version)
 
         runSimpleString(ejsPackageShimPython)
-        log.info("yt_dlp_ejs shim installed (core=\(coreJS.count) bytes, lib=\(libJS.count) bytes, version=\(EJSResources.version, privacy: .public))")
+        log.info("yt_dlp_ejs shim installed (core=\(coreJS.count, privacy: .public) bytes, lib=\(libJS.count, privacy: .public) bytes, version=\(EJSResources.version, privacy: .public))")
     }
 
     /// Python that builds `yt_dlp_ejs`, `yt_dlp_ejs.yt`, and `yt_dlp_ejs.yt.solver` as

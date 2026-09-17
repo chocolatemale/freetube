@@ -24,6 +24,7 @@ final class LogFileWriter {
     nonisolated static let subsystem = "com.leshko.freetube"
 
     private init() {
+        Self.migrateLegacyLogs()
         isEnabled = UserPreferences().logToFile
         if isEnabled { start() }
     }
@@ -69,9 +70,19 @@ final class LogFileWriter {
             .sorted { $0.lastPathComponent > $1.lastPathComponent }
     }
 
+    /// `Library/Application Support/Logs`. Earlier builds wrote to `Documents/Logs`, which
+    /// `UIFileSharingEnabled` exposes to Finder / the Files app and which is part of device
+    /// backups — the wrong place for request traces. Logs remain shareable on demand through
+    /// the Settings share sheet. `migrateLegacyLogs()` removes the old folder once.
     nonisolated static func logsDirectory() -> URL {
-        let docs = AppDirectories.documents
-        return docs.appendingPathComponent("Logs", isDirectory: true)
+        SecurityHardening.diagnosticsDirectory
+    }
+
+    /// Deletes `Documents/Logs` left behind by builds that logged into the shared folder.
+    nonisolated static func migrateLegacyLogs() {
+        let legacy = AppDirectories.documents.appendingPathComponent("Logs", isDirectory: true)
+        guard FileManager.default.fileExists(atPath: legacy.path) else { return }
+        try? FileManager.default.removeItem(at: legacy)
     }
 
     func clearAllLogs() {

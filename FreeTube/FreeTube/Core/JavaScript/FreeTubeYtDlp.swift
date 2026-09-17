@@ -96,8 +96,8 @@ public nonisolated func freetube_yt_dlp(
 /// **What's different vs the download path:**
 ///   - No progress hooks, no `parseOptions` — we hand-build the opts dict because we have no
 ///     argv to parse. The opts mirror what `freetube_yt_dlp` sets via parseOptions for the
-///     same set of YouTube extractor args (player-client fallback chain,
-///     no-check-certificates) so the probe sees the same formats the downloader would.
+///     same set of YouTube extractor args (player-client fallback chain) so the probe sees
+///     the same formats the downloader would.
 ///   - The result is a Python dict. The caller is responsible for extracting Swift-native
 ///     values on the Python thread before returning to the actor system — see
 ///     `YtDlpInfoService` for the canonical conversion pattern.
@@ -127,14 +127,20 @@ public nonisolated func freetube_yt_dlp_extract_info(url: String) async throws -
     // Under that combination the Python→Swift closure trampoline stalls.
     //
     // Workaround: don't cross the Python↔Swift boundary at all for log capture. Redirect
-    // Python's `sys.stderr` to a file inside our Logs directory, then tail that file from
-    // a Swift Task and forward new lines into `os.Logger`. Pure CPython on the Python
-    // side; pure Foundation FileHandle on the Swift side; no closure callbacks.
-    let logsDir = LogFileWriter.logsDirectory()
-    try? FileManager.default.createDirectory(at: logsDir, withIntermediateDirectories: true)
-    let stderrPath = logsDir.appendingPathComponent("ytdlp-stderr.log").path
-    try? FileManager.default.removeItem(atPath: stderrPath)
-    FileManager.default.createFile(atPath: stderrPath, contents: nil)
+    // Python's `sys.stderr` to a scratch file, then tail that file from a Swift Task and
+    // forward new lines into `os.Logger`. Pure CPython on the Python side; pure Foundation
+    // FileHandle on the Swift side; no closure callbacks.
+    //
+    // Security audit: the scratch file lives in `tmp/`, not `Documents/Logs` (which
+    // `UIFileSharingEnabled` exposes to Finder / Files and which is backed up). Verbose
+    // extractor output contains full signed CDN URLs (client IP, expiry, PoT token) and the
+    // exact third-party URL the user pasted into the Link tab. It is deleted when the probe
+    // finishes; the tail loop below already forwarded the lines to the unified log, and
+    // `LogFileWriter` mirrors them only if the user opted into file diagnostics.
+    let stderrPath = FileManager.default.temporaryDirectory
+        .appendingPathComponent("ytdlp-stderr-\(UUID().uuidString).log").path
+    FileManager.default.createFile(atPath: stderrPath, contents: nil, attributes: [.posixPermissions: 0o600])
+    defer { try? FileManager.default.removeItem(atPath: stderrPath) }
 
     let sys = try Python.attemptImport("sys")
     let builtinsModule = try Python.attemptImport("builtins")
@@ -180,13 +186,15 @@ public nonisolated func freetube_yt_dlp_extract_info(url: String) async throws -
     }
 
     var opts = PythonObject([:] as [String: PythonObject])
-    // Verbose so we see every extractor step in the redirected stderr. Removing
-    // `quiet`/`no_warnings` overrides the defaults.
-    opts["verbose"] = true
-    opts["quiet"] = false
+    // Verbose extractor tracing only when the user has opted into file diagnostics — that is
+    // the only situation where anyone reads it, and the verbose stream is where request URLs
+    // and headers end up. Warnings and errors are always kept.
+    let verbose = UserDefaults.standard.bool(forKey: "logToFile")
+    opts["verbose"] = PythonObject(verbose)
+    opts["quiet"] = PythonObject(!verbose)
     opts["no_warnings"] = false
     opts["noplaylist"] = true
-    opts["nocheckcertificate"] = true
+    // TLS verification stays ON — `SecurityHardening` provides the CA bundle via SSL_CERT_FILE.
     // Socket / HTTP timeout so a hung network leg throws a Python exception after ~30s
     // instead of spinning forever. yt-dlp's default is no timeout. The user can wait
     // 30s for an error; they cannot wait 3 minutes for the spinner.

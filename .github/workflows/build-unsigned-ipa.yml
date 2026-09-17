@@ -1,7 +1,13 @@
 name: Build unsigned IPA
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
+
+concurrency:
+  group: ipa-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:

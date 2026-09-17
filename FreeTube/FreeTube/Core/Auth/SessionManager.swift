@@ -41,6 +41,9 @@ final class SessionManager {
         log.info("[session] signOut called")
         store.clear()
         client.applyCookies("")
+        // The shared jar is locked to `.never` at launch, but a sign-out must not depend on
+        // ordering — drop anything that could still identify the account.
+        SecurityHardening.purgeSharedCookieJar()
         // Drop the visitor token too — if cookies were stale, the token they were paired with may
         // also be invalid. `ensureVisitorData` below seeds a fresh one for the anonymous session.
         client.clearVisitorData()

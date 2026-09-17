@@ -95,7 +95,7 @@ final class HLSResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private func handle(loadingRequest: AVAssetResourceLoadingRequest, realURL: URL) async {
         var request = URLRequest(url: realURL)
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
-        log.debug("→ GET \(realURL.absoluteString, privacy: .public)")
+        log.debug("→ GET \(SecurityHardening.redactedForLog(realURL), privacy: .public)")
 
         // Honor any byte-range the player asked for. AVPlayer issues ranged GETs for media segments;
         // for the playlist itself we typically get an "all bytes" request.
@@ -117,15 +117,15 @@ final class HLSResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
         do {
             let (data, response) = try await session.data(for: request)
             guard let http = response as? HTTPURLResponse else {
-                log.error("← non-HTTP response for \(realURL.absoluteString.prefix(100), privacy: .public)")
+                log.error("← non-HTTP response for \(SecurityHardening.redactedForLog(realURL), privacy: .public)")
                 loadingRequest.finishLoading(with: URLError(.badServerResponse))
                 return
             }
 
-            log.debug("← HTTP \(http.statusCode, privacy: .public) mime=\(http.mimeType ?? "?", privacy: .public) bytes=\(data.count, privacy: .public) range=\(rangeHeader ?? "(full)", privacy: .public) url=\(realURL.absoluteString.prefix(100), privacy: .public)")
+            log.debug("← HTTP \(http.statusCode, privacy: .public) mime=\(http.mimeType ?? "?", privacy: .public) bytes=\(data.count, privacy: .public) range=\(rangeHeader ?? "(full)", privacy: .public) url=\(SecurityHardening.redactedForLog(realURL), privacy: .public)")
 
             if http.statusCode >= 400 {
-                log.error("HTTP \(http.statusCode, privacy: .public) for \(realURL.absoluteString.prefix(120), privacy: .public)")
+                log.error("HTTP \(http.statusCode, privacy: .public) for \(SecurityHardening.redactedForLog(realURL), privacy: .public)")
                 loadingRequest.finishLoading(with: NSError(
                     domain: "HLSLoaderHTTP",
                     code: http.statusCode,
@@ -164,7 +164,7 @@ final class HLSResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
             loadingRequest.dataRequest?.respond(with: outgoing)
             loadingRequest.finishLoading()
         } catch {
-            log.error("Fetch failed for \(realURL.absoluteString.prefix(120), privacy: .public): \(String(describing: error), privacy: .public)")
+            log.error("Fetch failed for \(SecurityHardening.redactedForLog(realURL), privacy: .public): \(String(describing: error), privacy: .public)")
             loadingRequest.finishLoading(with: error)
         }
     }

@@ -557,12 +557,10 @@ final class DownloadManager: TemporaryDownloading {
         // global yt_dlp(argv:) routes through Python and intercepts subprocess.Popen for ffmpeg/ffprobe,
         // so the in-tree FFmpegSupport library handles muxing transparently.
         //
-        // `--no-check-certificates` is required because the embedded Python runtime (Python-iOS)
-        // doesn't ship with a CA cert bundle on a path OpenSSL expects, so verification fails with
-        // `CERTIFICATE_VERIFY_FAILED` on the first YouTube API request. We accept the trade-off
-        // because (a) the only host we talk to is youtube.com / googlevideo.com, (b) this is a
-        // sideload/personal app, and (c) the alternative is shipping certifi's cacert.pem and
-        // setting `SSL_CERT_FILE` ourselves — that can come later.
+        // TLS verification is ON. Earlier builds passed `--no-check-certificates` because
+        // Python-iOS ships OpenSSL without a reachable CA bundle; `SecurityHardening` now points
+        // `SSL_CERT_FILE` at the bundled Mozilla bundle, so yt-dlp verifies every host — including
+        // the Link tab's arbitrary sites. Do not reintroduce the flag.
         //
         // **No `--cookies` flag** — counter-intuitive, but yt-dlp's safety check
         // ("Skipping client X since it does not support cookies") removes the `tv_simply`,
@@ -570,15 +568,14 @@ final class DownloadManager: TemporaryDownloading {
         // present. Those are exactly the clients that give us the broadest format coverage on
         // PoT-locked content. With cookies the surviving clients (`web_creator`, `mweb`)
         // honestly report "No video formats found" — the bottleneck was never cookie auth, it
-        // was the JS-runtime-less n-cipher (CLAUDE.md §15.4). See `makeTemporaryCookiesFile`
-        // doc-comment for the longer history of this experiment.
+        // was the JS-runtime-less n-cipher (CLAUDE.md §15.4). See the note above
+        // `formatString(for:)` for the longer history of this experiment.
         let argv: [String] = [
             "https://www.youtube.com/watch?v=\(video.id)",
             "-f", formatString,
             "-o", outputTemplate,
             "--no-playlist",
             "--no-progress",
-            "--no-check-certificates",
             // **Player-client fallback chain.** Try several anonymous client profiles so yt-dlp
             // can retain valid HLS/progressive fallbacks when the native resolver fails.
             //
@@ -1441,57 +1438,14 @@ final class DownloadManager: TemporaryDownloading {
     /// can mux them. Avoid mixing `/` and `,` without grouping: yt-dlp parsed the old expression as
     /// progressive itag 18 *plus* audio itag 140, downloading redundant audio and obscuring errors.
     ///
-    /// Materializes a temporary Netscape-format `cookies.txt` from the user's stored YouTube
-    /// cookie header, suitable for yt-dlp's `--cookies <path>` flag.
+    /// **Never pass cookies to yt-dlp.** A helper that wrote the Keychain cookie header to a
+    /// temporary Netscape `cookies.txt` used to live here (unused since 2026-05-19). It was
+    /// removed in the security audit: plaintext session cookies on disk are exactly what
+    /// CLAUDE.md §2.5 forbids, and the experiment it supported showed cookies make extraction
+    /// *worse* — yt-dlp drops the `tv_simply` / `ios` / `android_vr` clients whenever a cookie
+    /// file is present, and those are the clients that cover PoT-locked content. The bottleneck
+    /// is the n-cipher (CLAUDE.md §15.4), which the JavaScriptCore bridge solves without auth.
     ///
-    /// **Currently unused.** Kept as a reference because the experiment that called it was
-    /// instructive — and someone will probably try it again. Summary of why it's not wired up:
-    ///
-    /// On 2026-05-19 we briefly added `--cookies <tmpfile>` to the yt-dlp argv in
-    /// `runYoutubeDLDownload` on the theory that authenticated requests would get more
-    /// permissive PoT enforcement from YouTube and rescue currently-403ing videos. yt-dlp
-    /// rejected this combination with the safety check `"Skipping client X since it does not
-    /// support cookies"` and dropped three of our seven configured player clients —
-    /// specifically `tv_simply`, `ios`, and `android_vr`, which are exactly the clients that
-    /// give us the broadest format coverage on PoT-locked content. With cookies the surviving
-    /// clients (`web_creator`, `mweb`) honestly reported `"No video formats found!"` for the
-    /// same videos that without cookies returned 23+ formats (then 403'd at download). Net
-    /// regression — we lost format extraction without gaining playable URLs.
-    ///
-    /// **The actual bottleneck is the n-cipher (CLAUDE.md §15.4), not auth.** Without a JS
-    /// runtime to solve YouTube's n-challenge, every URL we extract is either 403'd at the CDN
-    /// or stripped out before extraction. Cookies don't substitute for a PoT token.
-    ///
-    /// Returns `nil` when there's no stored header (anonymous user). The caller would be
-    /// responsible for deleting the file (via `defer`) after the yt-dlp invocation returns;
-    /// file lives in `FileManager.default.temporaryDirectory` with `chmod 0600`. Note that
-    /// even brief disk presence is a CLAUDE.md §2.5 deviation.
-    private static func makeTemporaryCookiesFile() -> URL? {
-        guard let header = CookieStore.shared.loadHeader() else { return nil }
-        let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("yt-dlp-cookies-\(UUID().uuidString).txt")
-        var lines = [
-            "# Netscape HTTP Cookie File",
-            "# Generated by FreeTube; deleted on yt-dlp completion.",
-        ]
-        for pair in header.split(separator: ";") {
-            let trimmed = pair.trimmingCharacters(in: .whitespaces)
-            guard let eq = trimmed.firstIndex(of: "=") else { continue }
-            let name = String(trimmed[..<eq])
-            let value = String(trimmed[trimmed.index(after: eq)...])
-            // domain TAB includeSubdomain TAB path TAB secure TAB expires TAB name TAB value
-            lines.append(".youtube.com\tTRUE\t/\tTRUE\t2147483647\t\(name)\t\(value)")
-        }
-        let content = lines.joined(separator: "\n") + "\n"
-        do {
-            try content.write(to: url, atomically: true, encoding: .utf8)
-            try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)
-            return url
-        } catch {
-            return nil
-        }
-    }
-
     /// We use `,` (download as separate files) instead of `+` (yt-dlp's merger) because yt-dlp's
     /// ffmpeg invocation hangs on iOS — see `muxToDestination` for the Swift-side replacement.
     private static func formatString(for quality: VideoQuality) -> String {
